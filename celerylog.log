@@ -1,0 +1,52 @@
+[2019-08-21 14:25:39,255: INFO/MainProcess] Connected to redis://localhost:6379/0
+[2019-08-21 14:25:39,263: INFO/MainProcess] mingle: searching for neighbors
+[2019-08-21 14:25:40,286: INFO/MainProcess] mingle: all alone
+[2019-08-21 14:25:40,302: INFO/MainProcess] celery@shilin-iMac.local ready.
+[2019-08-21 14:26:47,336: INFO/MainProcess] Connected to redis://localhost:6379/0
+[2019-08-21 14:26:47,344: INFO/MainProcess] mingle: searching for neighbors
+[2019-08-21 14:26:48,365: INFO/MainProcess] mingle: all alone
+[2019-08-21 14:26:48,382: INFO/MainProcess] worker@shilin-iMac.local ready.
+[2019-08-21 14:27:49,284: INFO/MainProcess] Received task: app.getWeibo[67641c67-b5ab-44c2-87b8-a4cb4200ad44]  
+[2019-08-21 14:27:49,502: WARNING/ForkPoolWorker-4] /Users/xiusl/InstanceProject/instance-spider/env/lib/python3.7/site-packages/urllib3/connectionpool.py:851: InsecureRequestWarning: Unverified HTTPS request is being made. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning)
+[2019-08-21 14:27:49,626: WARNING/ForkPoolWorker-4] {'id': '5d5ce465918aa95bd89f9cf2'}
+[2019-08-21 14:27:49,632: INFO/ForkPoolWorker-4] Task app.getWeibo[67641c67-b5ab-44c2-87b8-a4cb4200ad44] succeeded in 0.3365703970000027s: {'id': '5d5ce465918aa95bd89f9cf2'}
+[2019-08-21 14:33:11,094: INFO/MainProcess] Received task: app.getWeibo[f34b54ab-8cee-4a54-bbb5-f7007829e75d]  
+[2019-08-21 14:33:11,323: WARNING/ForkPoolWorker-3] /Users/xiusl/InstanceProject/instance-spider/env/lib/python3.7/site-packages/urllib3/connectionpool.py:851: InsecureRequestWarning: Unverified HTTPS request is being made. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning)
+[2019-08-21 14:33:11,398: WARNING/ForkPoolWorker-3] {'id': '5d5ce5a71cd737d6c79f9cf2'}
+[2019-08-21 14:33:11,405: INFO/ForkPoolWorker-3] Task app.getWeibo[f34b54ab-8cee-4a54-bbb5-f7007829e75d] succeeded in 0.2979253930000141s: {'id': '5d5ce5a71cd737d6c79f9cf2'}
+[2019-08-21 14:34:07,692: INFO/MainProcess] Received task: app.getWeibo[12cb1530-eea6-46ca-9592-216ee08f7d9a]  
+[2019-08-21 14:34:07,863: WARNING/ForkPoolWorker-4] /Users/xiusl/InstanceProject/instance-spider/env/lib/python3.7/site-packages/urllib3/connectionpool.py:851: InsecureRequestWarning: Unverified HTTPS request is being made. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning)
+[2019-08-21 14:34:07,933: WARNING/ForkPoolWorker-4] {'id': '5d5ce5df918aa95bd89f9cf4'}
+[2019-08-21 14:34:07,937: INFO/ForkPoolWorker-4] Task app.getWeibo[12cb1530-eea6-46ca-9592-216ee08f7d9a] succeeded in 0.23630618199996434s: {'id': '5d5ce5df918aa95bd89f9cf4'}
+[2019-08-21 14:48:56,179: INFO/MainProcess] Received task: app.getWeibo[d3a0e328-d9eb-4d33-9a21-c62a055578d3]  
+[2019-08-21 14:48:56,363: WARNING/ForkPoolWorker-3] /Users/xiusl/InstanceProject/instance-spider/env/lib/python3.7/site-packages/urllib3/connectionpool.py:851: InsecureRequestWarning: Unverified HTTPS request is being made. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning)
+[2019-08-21 14:48:56,471: WARNING/ForkPoolWorker-3] {'id': '5d5ce9581cd737d6c79f9cf4'}
+[2019-08-21 14:48:56,476: INFO/ForkPoolWorker-3] Task app.getWeibo[d3a0e328-d9eb-4d33-9a21-c62a055578d3] succeeded in 0.2859364139999343s: {'id': '5d5ce9581cd737d6c79f9cf4'}
+[2019-08-21 15:01:08,110: INFO/MainProcess] Received task: app.getWeibo[8ec4f3f8-2de0-491b-b55c-94d61f29d72f]  
+[2019-08-21 15:01:08,313: WARNING/ForkPoolWorker-4] /Users/xiusl/InstanceProject/instance-spider/env/lib/python3.7/site-packages/urllib3/connectionpool.py:851: InsecureRequestWarning: Unverified HTTPS request is being made. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning)
+[2019-08-21 15:01:08,399: WARNING/ForkPoolWorker-4] {'id': '5d5cec34918aa95bd89f9cf6'}
+[2019-08-21 15:01:08,404: INFO/ForkPoolWorker-4] Task app.getWeibo[8ec4f3f8-2de0-491b-b55c-94d61f29d72f] succeeded in 0.28303964799988535s: {'id': '5d5cec34918aa95bd89f9cf6'}
+[2019-08-21 15:02:16,522: INFO/MainProcess] Connected to redis://localhost:6379/0
+[2019-08-21 15:02:16,531: INFO/MainProcess] mingle: searching for neighbors
+[2019-08-21 15:02:17,551: INFO/MainProcess] mingle: all alone
+[2019-08-21 15:02:17,567: INFO/MainProcess] worker@shilin-iMac.local ready.
+[2019-08-21 15:03:13,002: INFO/MainProcess] Received task: app.getWeibo[880ab3b9-387a-4b6c-a868-5fcfe27215bb]  
+[2019-08-21 15:03:13,212: WARNING/ForkPoolWorker-4] /Users/xiusl/InstanceProject/instance-spider/env/lib/python3.7/site-packages/urllib3/connectionpool.py:851: InsecureRequestWarning: Unverified HTTPS request is being made. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning)
+[2019-08-21 15:03:13,422: WARNING/ForkPoolWorker-4] {'id': '5d5cecb127bee92e43905015'}
+[2019-08-21 15:03:13,429: INFO/ForkPoolWorker-4] Task app.getWeibo[880ab3b9-387a-4b6c-a868-5fcfe27215bb] succeeded in 0.41117910899999544s: {'id': '5d5cecb127bee92e43905015'}
+[2019-08-21 15:35:10,395: INFO/MainProcess] Received task: app.getWeibo[3f6beaf0-23ff-416f-892a-3f841fa43afe]  
+[2019-08-21 15:35:10,605: WARNING/ForkPoolWorker-3] /Users/xiusl/InstanceProject/instance-spider/env/lib/python3.7/site-packages/urllib3/connectionpool.py:851: InsecureRequestWarning: Unverified HTTPS request is being made. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning)
+[2019-08-21 15:35:10,683: WARNING/ForkPoolWorker-3] {'id': '5d5cf42ee4ab31e028905015'}
+[2019-08-21 15:35:10,689: INFO/ForkPoolWorker-3] Task app.getWeibo[3f6beaf0-23ff-416f-892a-3f841fa43afe] succeeded in 0.27998241000000235s: {'id': '5d5cf42ee4ab31e028905015'}
+[2019-08-21 15:52:50,077: INFO/MainProcess] Received task: app.getWeibo[c9b1af42-5f3e-4bce-89ef-4e490ec9c83e]  
+[2019-08-21 15:52:50,327: WARNING/ForkPoolWorker-4] /Users/xiusl/InstanceProject/instance-spider/env/lib/python3.7/site-packages/urllib3/connectionpool.py:851: InsecureRequestWarning: Unverified HTTPS request is being made. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning)
+[2019-08-21 15:52:50,430: WARNING/ForkPoolWorker-4] {'id': '5d5cf85227bee92e43905017'}
+[2019-08-21 15:52:50,436: INFO/ForkPoolWorker-4] Task app.getWeibo[c9b1af42-5f3e-4bce-89ef-4e490ec9c83e] succeeded in 0.34785752400011916s: {'id': '5d5cf85227bee92e43905017'}

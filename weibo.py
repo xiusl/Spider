@@ -102,8 +102,9 @@ class WeiboSpider():
             "original_id": status.get('mid'),
             "author": user.get('screen_name'),
             "author_idf": str(user.get('id')),
+            "published_at": status.get('created_at'),
             "created_at": datetime.datetime.utcnow(),
-            "source": 'weibo',
+            "type": 'weibo',
             "images": p
         }
         article = self.db.article
