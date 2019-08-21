@@ -93,9 +93,11 @@ class WeiboSpider():
         if pics:
             for d in pics:
                 p.append(d.get('url'))
+
+        content = re.sub(r'<(.*?)>', '', status.get('text'))
         sa = {
             "title": status.get('status_title'),
-            "content": status.get('text'),
+            "content": content,
             "original_url": url,
             "original_id": status.get('mid'),
             "author": user.get('screen_name'),
