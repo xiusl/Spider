@@ -1,6 +1,10 @@
 flask
+flask-cors
 requests
 rsa
 
 celery
+redis
+
+pymongo
 

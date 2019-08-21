@@ -5,8 +5,10 @@ import requests
 import urllib
 import json
 import base64, rsa, binascii
+import datetime
 import re
-from .weibo_config import Config
+from weibo_config import Config
+from pymongo import MongoClient
 
 class WeiboSpider():
 
@@ -18,7 +20,8 @@ class WeiboSpider():
             'Accept-Encoding': 'gzip, deflate, br',
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/604.5.6 (KHTML, like Gecko) Version/11.0.3 Safari/604.5.6'
         }
-
+        dbCli = MongoClient('mongodb://localhost:27017/')
+        self.db = dbCli['instance_db']
 
     def _pre_login(self, account, password):
         headers = self.headers
@@ -81,5 +84,27 @@ class WeiboSpider():
         response = self.session.get(url, headers=self.headers, verify=False, timeout=60)
         data = re.findall(r'render_data = ([\s\S]*?)\[0\] \|\| \{\};', response.text)
         status = json.loads(data[0])
-        return status
+        if len(status) > 0:
+            status = status[0]
+        status = status.get('status')
+        user = status.get('user')
+        pics = status.get('pics')
+        p = []
+        if pics:
+            for d in pics:
+                p.append(d.get('url'))
+        sa = {
+            "title": status.get('status_title'),
+            "content": status.get('text'),
+            "original_url": url,
+            "original_id": status.get('mid'),
+            "author": user.get('screen_name'),
+            "author_idf": str(user.get('id')),
+            "created_at": datetime.datetime.utcnow(),
+            "source": 'weibo',
+            "images": p
+        }
+        article = self.db.article
+        inid = article.insert_one(sa).inserted_id
+        return {'id':str(inid)}
 
