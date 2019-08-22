@@ -50,3 +50,34 @@
   InsecureRequestWarning)
 [2019-08-21 15:52:50,430: WARNING/ForkPoolWorker-4] {'id': '5d5cf85227bee92e43905017'}
 [2019-08-21 15:52:50,436: INFO/ForkPoolWorker-4] Task app.getWeibo[c9b1af42-5f3e-4bce-89ef-4e490ec9c83e] succeeded in 0.34785752400011916s: {'id': '5d5cf85227bee92e43905017'}
+[2019-08-22 16:48:22,340: INFO/MainProcess] Connected to redis://localhost:6379/0
+[2019-08-22 16:48:22,350: INFO/MainProcess] mingle: searching for neighbors
+[2019-08-22 16:48:23,371: INFO/MainProcess] mingle: all alone
+[2019-08-22 16:48:23,388: INFO/MainProcess] worker@shilin-iMac.local ready.
+[2019-08-22 17:22:34,668: INFO/MainProcess] Connected to redis://localhost:6379/0
+[2019-08-22 17:22:34,676: INFO/MainProcess] mingle: searching for neighbors
+[2019-08-22 17:22:35,699: INFO/MainProcess] mingle: all alone
+[2019-08-22 17:22:35,716: INFO/MainProcess] worker@shilin-iMac.local ready.
+[2019-08-22 17:31:39,889: INFO/MainProcess] Received task: app.getWechat[b1d304cb-55a0-456b-a89a-7f01450b3ae3]  
+[2019-08-22 17:31:40,098: INFO/ForkPoolWorker-4] Task app.getWechat[b1d304cb-55a0-456b-a89a-7f01450b3ae3] succeeded in 0.2059668929999816s: {'id': '5d5e60fcabe6923cd062e267'}
+[2019-08-22 17:32:46,333: INFO/MainProcess] Received task: app.getWeibo[74c78427-e9ab-423e-920c-67481846406b]  
+[2019-08-22 17:32:46,430: WARNING/ForkPoolWorker-3] /Users/xiusl/InstanceProject/instance-spider/env/lib/python3.7/site-packages/urllib3/connectionpool.py:851: InsecureRequestWarning: Unverified HTTPS request is being made. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning)
+[2019-08-22 17:32:46,516: ERROR/ForkPoolWorker-3] Task app.getWeibo[74c78427-e9ab-423e-920c-67481846406b] raised unexpected: IndexError('list index out of range')
+Traceback (most recent call last):
+  File "/Users/xiusl/InstanceProject/instance-spider/env/lib/python3.7/site-packages/celery/app/trace.py", line 385, in trace_task
+    R = retval = fun(*args, **kwargs)
+  File "/Users/xiusl/InstanceProject/instance-spider/env/lib/python3.7/site-packages/celery/app/trace.py", line 648, in __protected_call__
+    return self.run(*args, **kwargs)
+  File "/Users/xiusl/InstanceProject/instance-spider/app.py", line 24, in getWeibo
+    data = sp.getWeiboByUrl(url)
+  File "/Users/xiusl/InstanceProject/instance-spider/weibo.py", line 86, in getWeiboByUrl
+    status = json.loads(data[0])
+IndexError: list index out of range
+[2019-08-22 17:32:50,833: INFO/MainProcess] Received task: app.getWechat[90d899a5-827d-46cc-9b49-3e90d986aec4]  
+[2019-08-22 17:32:51,005: INFO/ForkPoolWorker-4] Task app.getWechat[90d899a5-827d-46cc-9b49-3e90d986aec4] succeeded in 0.17132536799999798s: {'id': '5d5e6143abe6923cd062e269'}
+[2019-08-22 17:34:25,556: INFO/MainProcess] Received task: app.getWeibo[7450ddcc-bc9c-4bad-b5b4-b2bfe0608af4]  
+[2019-08-22 17:34:25,675: WARNING/ForkPoolWorker-3] /Users/xiusl/InstanceProject/instance-spider/env/lib/python3.7/site-packages/urllib3/connectionpool.py:851: InsecureRequestWarning: Unverified HTTPS request is being made. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning)
+[2019-08-22 17:34:25,741: WARNING/ForkPoolWorker-3] {'id': '5d5e61a13206316c3e62e268'}
+[2019-08-22 17:34:25,744: INFO/ForkPoolWorker-3] Task app.getWeibo[7450ddcc-bc9c-4bad-b5b4-b2bfe0608af4] succeeded in 0.18310065500008932s: {'id': '5d5e61a13206316c3e62e268'}

@@ -7,4 +7,5 @@ celery
 redis
 
 pymongo
+lxml
 

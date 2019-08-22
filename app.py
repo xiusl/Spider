@@ -4,6 +4,7 @@
 from flask import Flask, request
 from flask_cors import CORS
 from weibo import WeiboSpider
+from wechat import WechatSpider
 from celery import Celery
 
 app = Flask(__name__)
@@ -38,6 +39,21 @@ def weibo():
     url = data.get('url')
     res = getWeibo.delay(url)
     return {'id': str(res.id)}
+
+
+@celery.task
+def getWechat(url):
+    sp = WechatSpider()
+    d = sp.getWechatByUrl(url)
+    return d
+
+@app.route('/wechat', methods=['POST'])
+def wechat():
+    data = request.get_json()
+    url = data.get('url')
+    res = getWechat.delay(url)
+    return {'id': str(res.id)}
+
 
 if __name__ == '__main__':
     app.run(port=5001)
