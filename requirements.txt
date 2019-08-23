@@ -8,4 +8,4 @@ redis
 
 pymongo
 lxml
-
+cos-python-sdk-v5

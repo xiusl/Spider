@@ -6,8 +6,10 @@ import urllib
 import json
 import base64, rsa, binascii
 import datetime
+import time
 import re
 from weibo_config import Config
+from utils import ImageTool
 from pymongo import MongoClient
 
 class WeiboSpider():
@@ -22,6 +24,7 @@ class WeiboSpider():
         }
         dbCli = MongoClient('mongodb://localhost:27017/')
         self.db = dbCli['instance_db']
+        self.im_tool = ImageTool()
 
     def _pre_login(self, account, password):
         headers = self.headers
@@ -92,7 +95,11 @@ class WeiboSpider():
         p = []
         if pics:
             for d in pics:
-                p.append(d.get('url'))
+                im_url = d.get('url')
+                im, typ = self.im_tool.download(im_url)
+                new_url = self.im_tool.upload(im, typ)
+                p.append(new_url)
+                time.sleep(1)
 
         content = re.sub(r'<(.*?)>', '', status.get('text'))
         sa = {

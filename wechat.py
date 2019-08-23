@@ -6,7 +6,9 @@ import json
 import re
 import pymongo
 import datetime
+import time
 from lxml import etree
+from utils import ImageTool
 
 def fix_text(some):
     some = ''.join(some)
@@ -24,6 +26,7 @@ class WechatSpider():
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/604.5.6 (KHTML, like Gecko) Version/11.0.3 Safari/604.5.6'
         }
         self._init_db()
+        self.im_tool = ImageTool()
         
     def _init_db(self):
         client = pymongo.MongoClient(host="127.0.0.1", port=27017)
@@ -98,10 +101,17 @@ class WechatSpider():
         content = re.sub(r'<p><span><br></span></p>', "", content)
         
             #    print(content)
+        content = re.sub(r'<(.*?)>', '', content)
+
 
         images = html.xpath('//img/@data-src')
 #        print(images)
-
+        ims = []
+        for im_url in images:
+            im, typ = self.im_tool.download(im_url)
+            n_url = self.im_tool.upload(im, typ)
+            ims.append(n_url)
+            time.sleep(1)
             
 #        print(content1)
         sa = {
@@ -114,7 +124,7 @@ class WechatSpider():
             "published_at": times,
             "created_at": datetime.datetime.utcnow(),
             "type": 'wechat',
-            "images": images
+            "images": ims
         }
         inid = self.art_col.insert_one(sa).inserted_id
         return {'id':str(inid)}
