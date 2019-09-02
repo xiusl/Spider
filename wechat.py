@@ -8,6 +8,7 @@ import pymongo
 import datetime
 import time
 import random
+import os
 from lxml import etree
 from utils import ImageTool
 
@@ -30,7 +31,8 @@ class WechatSpider():
         self.im_tool = ImageTool()
         
     def _init_db(self):
-        client = pymongo.MongoClient(host="127.0.0.1", port=27017)
+        mongo_url = os.getenv('MONGO_URL') or 'mongodb://127.0.0.1:27017'
+        client = pymongo.MongoClient(mongo_url)
         db = client['instance_db']
         self.art_col = db.article
 
