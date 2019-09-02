@@ -173,3 +173,57 @@ IndexError: list index out of range
 [2019-08-23 15:30:45,812: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/2925075f8d736bc88af9c5af3c48861a ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/jpeg'}
 [2019-08-23 15:30:46,999: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/c82b6435fb6d21d1bdda03cdcf7b22f5 ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/gif'}
 [2019-08-23 15:30:48,391: INFO/ForkPoolWorker-4] Task app.getWechat[c2d46c02-bdeb-4a66-9d54-413483eecf70] succeeded in 7.7126332359999985s: {'id': '5d5f96288e4fcb561861f011'}
+[2019-08-30 15:09:56,129: INFO/MainProcess] Connected to redis://localhost:6379/0
+[2019-08-30 15:09:56,142: INFO/MainProcess] mingle: searching for neighbors
+[2019-08-30 15:09:57,164: INFO/MainProcess] mingle: all alone
+[2019-08-30 15:09:57,178: INFO/MainProcess] worker@shilin-iMac.local ready.
+[2019-09-02 09:20:32,241: INFO/MainProcess] Connected to redis://localhost:6379/0
+[2019-09-02 09:20:32,250: INFO/MainProcess] mingle: searching for neighbors
+[2019-09-02 09:20:33,273: INFO/MainProcess] mingle: all alone
+[2019-09-02 09:20:33,286: INFO/MainProcess] worker@shilin-iMac.local ready.
+[2019-09-02 09:23:26,851: INFO/MainProcess] Received task: app.getWechat[9b5d4b42-d960-458f-8898-eb8fd5bd7eb9]  
+[2019-09-02 09:23:27,292: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/26c1c76428e3afbada131f68ba41fb60 ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/jpeg'}
+[2019-09-02 09:23:28,728: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/9eeb281a2e57684b5850746e4f28b703 ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/png'}
+[2019-09-02 09:23:29,836: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/bb0159e381ec0043fa4819860ee9d635 ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/png'}
+[2019-09-02 09:23:30,943: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/b6449dd8bb2c9ca6dccd89f61d31c791 ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/png'}
+[2019-09-02 09:23:32,083: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/8bb7ce759b58ef51c55db915f8d356c9 ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/jpeg'}
+[2019-09-02 09:23:33,215: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/09fe088c4a454bb761398bbc62a07035 ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/png'}
+[2019-09-02 09:23:34,318: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/a5281e5529aa646bf6758ef1735e670e ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/png'}
+[2019-09-02 09:23:35,423: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/f60f7a36dd87836dab46cfc519c0f15a ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/png'}
+[2019-09-02 09:23:36,530: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/be85199e3a865f3c569154aa04c197ec ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/png'}
+[2019-09-02 09:23:37,651: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/46c77bdd0c950665cee7ab2e3c3c5833 ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/png'}
+[2019-09-02 09:23:38,799: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/5cf3536ff5b0f2ce481098ba71b808ec ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/jpeg'}
+[2019-09-02 09:23:39,907: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/a1a6202e6b236f2402996c89479263e4 ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/jpeg'}
+[2019-09-02 09:23:41,012: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/8c3cbb6816926a8676f8ccacb57eab88 ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/png'}
+[2019-09-02 09:23:42,117: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/0afb8ea3ae07e76dc0f6af0ddd95b532 ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/png'}
+[2019-09-02 09:23:43,235: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/ac60fe7f25ff89afaa2ea88bb57f1602 ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/jpeg'}
+[2019-09-02 09:23:44,386: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/bd75791e549cfda15733e4d1c3b1b7de ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/gif'}
+[2019-09-02 09:23:45,595: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/b83c59bca367738be3bfca84eab88a9e ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/png'}
+[2019-09-02 09:23:46,712: INFO/ForkPoolWorker-4] Task app.getWechat[9b5d4b42-d960-458f-8898-eb8fd5bd7eb9] succeeded in 19.853356915000006s: {'id': '5d6c6f22836354cdd027fd32'}
+[2019-09-02 09:36:13,232: INFO/MainProcess] Connected to redis://localhost:6379/0
+[2019-09-02 09:36:13,241: INFO/MainProcess] mingle: searching for neighbors
+[2019-09-02 09:36:14,263: INFO/MainProcess] mingle: all alone
+[2019-09-02 09:36:14,279: INFO/MainProcess] worker@shilin-iMac.local ready.
+[2019-09-02 09:36:37,347: INFO/MainProcess] Received task: app.getWeibo[04a79b84-47e4-4e3a-bdb8-15a910dff143]  
+[2019-09-02 09:36:37,544: WARNING/ForkPoolWorker-4] /Users/xiusl/InstanceProject/instance-spider/env/lib/python3.7/site-packages/urllib3/connectionpool.py:851: InsecureRequestWarning: Unverified HTTPS request is being made. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning)
+[2019-09-02 09:36:37,720: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/7ad0193b4fe3c2b54c96fd27e37d4616 ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/jpeg'}
+[2019-09-02 09:36:39,115: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/af4a9ea2c6cf190867039c30ce972d6d ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/jpeg'}
+[2019-09-02 09:36:40,310: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/c1d7698095312476933501b1d6905776 ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/jpeg'}
+[2019-09-02 09:36:41,506: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/80cf151b84a05802c2e700cef2d2a4a4 ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/jpeg'}
+[2019-09-02 09:36:42,602: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/2e9edd78fbfb94c5848f7e85c01ccb33 ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/jpeg'}
+[2019-09-02 09:36:43,700: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/dcbb28568592e93a5be8f5f577e9914c ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/jpeg'}
+[2019-09-02 09:36:44,812: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/e81fd6e2435981e0e33301385a9eb968 ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/jpeg'}
+[2019-09-02 09:36:45,902: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/5abe7cb0cb88006da0989f8949942d95 ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/jpeg'}
+[2019-09-02 09:36:47,011: INFO/ForkPoolWorker-4] put object, url=:https://shilin-1255431184.cos.ap-beijing.myqcloud.com/d08ba47ccc8acdbfa9c0fbb2be628f92 ,headers=:{'x-cos-storage-class': 'STANDARD', 'Content-Type': 'image/jpeg'}
+[2019-09-02 09:36:48,089: ERROR/ForkPoolWorker-4] Task app.getWeibo[04a79b84-47e4-4e3a-bdb8-15a910dff143] raised unexpected: AttributeError("module 'datetime' has no attribute 'strptime'")
+Traceback (most recent call last):
+  File "/Users/xiusl/InstanceProject/instance-spider/env/lib/python3.7/site-packages/celery/app/trace.py", line 385, in trace_task
+    R = retval = fun(*args, **kwargs)
+  File "/Users/xiusl/InstanceProject/instance-spider/env/lib/python3.7/site-packages/celery/app/trace.py", line 648, in __protected_call__
+    return self.run(*args, **kwargs)
+  File "/Users/xiusl/InstanceProject/instance-spider/app.py", line 24, in getWeibo
+    data = sp.getWeiboByUrl(url)
+  File "/Users/xiusl/InstanceProject/instance-spider/weibo.py", line 106, in getWeiboByUrl
+    pb_time = datetime.strptime(status.get('created_at'))
+AttributeError: module 'datetime' has no attribute 'strptime'

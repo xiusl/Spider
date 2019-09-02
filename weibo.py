@@ -102,6 +102,9 @@ class WeiboSpider():
                 time.sleep(1)
 
         content = re.sub(r'<(.*?)>', '', status.get('text'))
+
+        pb_time = datetime.datetime.strptime(status.get('created_at'),'%a %b %d %H:%M:%S %z %Y')
+
         sa = {
             "title": status.get('status_title'),
             "content": content,
@@ -109,7 +112,7 @@ class WeiboSpider():
             "original_id": status.get('mid'),
             "author": user.get('screen_name'),
             "author_idf": str(user.get('id')),
-            "published_at": status.get('created_at'),
+            "published_at": pb_time,
             "created_at": datetime.datetime.utcnow(),
             "type": 'weibo',
             "images": p
