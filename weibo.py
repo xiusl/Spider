@@ -95,7 +95,7 @@ class WeiboSpider():
         p = []
         if pics:
             for d in pics:
-                im_url = d.get('url')
+                im_url = d.get('large').get('url')
                 im, typ = self.im_tool.download(im_url)
                 new_url = self.im_tool.upload(im, typ)
                 p.append(new_url)
@@ -108,6 +108,7 @@ class WeiboSpider():
         sa = {
             "title": status.get('status_title'),
             "content": content,
+            "transcoding": content,
             "original_url": url,
             "original_id": status.get('mid'),
             "author": user.get('screen_name'),

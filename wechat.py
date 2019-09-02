@@ -7,6 +7,7 @@ import re
 import pymongo
 import datetime
 import time
+import random
 from lxml import etree
 from utils import ImageTool
 
@@ -99,9 +100,10 @@ class WechatSpider():
         content = re.sub(r' style=\"(.*?)\"', "", content)
         content = re.sub(r'<p><br></p>', "", content)
         content = re.sub(r'<p><span><br></span></p>', "", content)
-        
+
             #    print(content)
-        content = re.sub(r'<(.*?)>', '', content)
+        #content = re.sub(r'<(.*?)>', '', content)
+    
 
 
         images = html.xpath('//img/@data-src')
@@ -111,12 +113,28 @@ class WechatSpider():
             im, typ = self.im_tool.download(im_url)
             n_url = self.im_tool.upload(im, typ)
             ims.append(n_url)
-            time.sleep(1)
-            
+            wwait = random.random()
+            time.sleep(wwait)
+
+        trans_cont = content
+        i = 0
+        for im_url2 in images:
+            myimurl = ims[i]
+            re_url1 = "data-src=\"" + im_url2 + "\""
+            re_url2 = "src=\"" + im_url2 + "\""
+            my_re = "src=\"" + myimurl + "\""
+            trans_cont = trans_cont.replace(re_url1, my_re)
+            trans_cont = trans_cont.replace(re_url2, my_re)
+            i += 1
+
+
+        content = re.sub(r'<(.*?)>', '', content)
+
 #        print(content1)
         sa = {
             "title": title,
             "content": content,
+            "transcoding": trans_cont,
             "original_url": url,
             "original_id": "",
             "author": wx_name+' '+author ,
