@@ -6,6 +6,7 @@ from flask_cors import CORS
 from weibo import WeiboSpider
 from wechat import WechatSpider
 from celery import Celery
+from spider import Spider
 
 app = Flask(__name__)
 app.config['PORT'] = 5001
@@ -54,6 +55,19 @@ def wechat():
     res = getWechat.delay(url)
     return {'id': str(res.id)}
 
+@celery.task
+def get36Kr(url):
+    sp = Spider()
+    data = sp.getHtmlByUrl(url)
+    res = sp.paraseData36kr(data)
+    return res
+
+@app.route('/kr36', methods=['POST'])
+def kr36():
+    data = request.get_json()
+    url = data.get('url')
+    res = get36Kr.delay(url)
+    return res
 
 if __name__ == '__main__':
     app.run(port=5001)
