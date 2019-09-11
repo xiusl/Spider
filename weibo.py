@@ -23,7 +23,7 @@ class WeiboSpider():
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/604.5.6 (KHTML, like Gecko) Version/11.0.3 Safari/604.5.6'
         }
         mongo_url = os.getenv('MONGO_URL') or 'mongodb://127.0.0.1:27017'
-        client = pymongo.MongoClient(mongo_url
+        client = pymongo.MongoClient(mongo_url)
         self.db = client['instance_db']
         self.im_tool = ImageTool()
 
