@@ -35,8 +35,6 @@ def getWeiboo(self, url):
 @app.route('/weibo', methods=['POST'])
 def weibo():
     data = request.get_json()
-    print('acb')
-    print(data)
     url = data.get('url')
     res = getWeibo.delay(url)
     return {'id': str(res.id)}
