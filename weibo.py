@@ -85,10 +85,8 @@ class WeiboSpider():
         return True
 
 
-    # https://m.weibo.cn/detail/4406938466619553
-    # https://weibointl.api.weibo.cn/share/92977721.html?weibo_id=4418325721135779
     def getWeiboByUrl(self, url):
-        if 'weibointl' in url:
+        if "weibointl" in url:
             f_pars = urllib.parse.urlparse(url)
             f_que = f_pars.query
             f_d = urllib.parse.parse_qs(f_que)
