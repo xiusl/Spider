@@ -3,6 +3,7 @@
 
 import requests
 import urllib
+import urllib.parse
 import json
 import base64, rsa, binascii
 import datetime
@@ -85,7 +86,15 @@ class WeiboSpider():
 
 
     # https://m.weibo.cn/detail/4406938466619553
+    # https://weibointl.api.weibo.cn/share/92977721.html?weibo_id=4418325721135779
     def getWeiboByUrl(self, url):
+        if 'weibointl' in url:
+            f_pars = urllib.parse.urlparse(url)
+            f_que = f_pars.query
+            f_d = urllib.parse.parse_qs(f_que)
+            w_id = f_d.get('weibo_id')[0]
+            url = 'https://m.weibo.cn/detail/'+ str(w_id)
+
         response = self.session.get(url, headers=self.headers, verify=False, timeout=60)
         data = re.findall(r'render_data = ([\s\S]*?)\[0\] \|\| \{\};', response.text)
         status = json.loads(data[0])
