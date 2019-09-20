@@ -32,8 +32,12 @@ class Spider():
         db = client['instance_db']
         self.db = db
 
+    def _fixText(self, text):
+        new_t = ''.join(text)
+        return new_t.strip()
 
     def getHtmlByUrl(self, url):
+        self.url = url
         response = self.session.get(url, headers=self.headers)
         data = response.text
         return data
@@ -120,7 +124,60 @@ class Spider():
             time.sleep(wait)
         return ims
 
-# sp = Spider()
-# data = sp.getHtmlByFile('/Users/xiusl/Desktop/kr36.htm')
-# sp.paraseData36kr(data)
+    def paraseDataLaohu(self, data):
+        html = etree.HTML(data)
+        
+        title = html.xpath('//h1[@class="article-title"]/text()')
+        title = self._fixText(title)
+
+        author = html.xpath('//span[@class="article-author"]/text()')
+        author = self._fixText(author)
+
+        pub = html.xpath('//span[@class="article-date"]/text()')
+        pub = self._fixText(pub)
+        pub = pub[2:]
+        pub = datetime.datetime.strptime(pub, '%Y-%m-%d %H:%M')
+
+        content = html.xpath('//div[@class="article-content"]')
+        content = etree.tostring(content[0], encoding="utf8", pretty_print=True, method="html")
+        content = content.decode('utf8')
+
+        images = html.xpath('//div[@class="article-content"]')[0].xpath('.//img/@src')
+        ims = self._uploadImages(images)
+
+        trans_cont = content
+        i = 0
+        for im_url in images:
+            new_url = ims[i]
+            re_url = "src=\""+im_url+"\""
+            my_url = "src=\""+new_url+"\""
+            trans_cont = content.replace(re_url,my_url)
+            i += 1
+
+        sa = {
+            "title": title,
+            "content": content,
+            "transcoding": trans_cont,
+            "original_url": self.url,
+            "original_id": "",
+            "author": author ,
+            "author_idf": "",
+            "published_at": pub,
+            "created_at": datetime.datetime.utcnow(),
+            "type": 'laohu',
+            "images": ims
+        }
+
+        ins_id = self._save(sa)
+        print(sa)
+        print('insert ok %s' % ins_id)
+        return {'id':str(ins_id)}
+
+
+
+
+
+#sp = Spider()
+#data = sp.getHtmlByFile('/Users/xiusl/Desktop/laohu.htm')
+#sp.paraseDataLaohu(data)
 
