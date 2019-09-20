@@ -28,6 +28,7 @@ class Spider():
         
     def _init_db(self):
         mongo_url = os.getenv('MONGO_URL') or 'mongodb://127.0.0.1:27017'
+        print(mongo_url)
         client = pymongo.MongoClient(mongo_url)
         db = client['instance_db']
         self.db = db

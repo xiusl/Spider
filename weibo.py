@@ -8,9 +8,10 @@ import base64, rsa, binascii
 import datetime
 import time
 import re
+import os
+import pymongo
 from weibo_config import Config
 from utils import ImageTool
-from pymongo import MongoClient
 
 class WeiboSpider():
 
