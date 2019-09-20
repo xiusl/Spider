@@ -66,6 +66,21 @@ def kr36():
     res = get36Kr.delay(url)
     return res
 
+@celery.task
+def getLaohu(url):
+    sp = Spider()
+    data = sp.getHtmlByUrl(url)
+    res = sp.paraseDataLaohu(data)
+    return res
+
+@app.route('/laohu', methods=['POST'])
+def laohu():
+    data = request.get_json()
+    url = data.get('url')
+    res = getLaohu.delay(url)
+    return res
+
+
 if __name__ == '__main__':
     app.run(port=5001)
 
