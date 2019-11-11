@@ -211,8 +211,8 @@ class Spider():
 
         title = note.get('public_title')
         author = u.get('nickname')
-        author_id = u.get('id')
-        ori_id = note.get('id')
+        author_id = str(u.get('id'))
+        ori_id = str(note.get('id'))
         pub = note.get('first_shared_at')
         pub = datetime.datetime.utcfromtimestamp(int(pub))
     
