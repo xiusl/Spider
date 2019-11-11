@@ -78,7 +78,7 @@ def laohu():
     data = request.get_json()
     url = data.get('url')
     res = getLaohu.delay(url)
-    return res
+    return {'id':"12312"}
 
 
 if __name__ == '__main__':

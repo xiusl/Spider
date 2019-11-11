@@ -48,7 +48,7 @@ class WechatSpider():
             date = date[0]
         date = re.findall(r'\"[0-9]*\"', date)[0]
         date = date[1:-1]
-        times = datetime.datetime.fromtimestamp(int(date))
+        times = datetime.datetime.utcfromtimestamp(int(date))
         
         
         title = html.xpath('//h2[@id="activity-name"]/text()')
