@@ -20,10 +20,13 @@ class WeiboSpider():
     def __init__(self):
         self.session = requests.session()
         self.headers = {
-            'Accept': 'application/json, text/plain, */*',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
             'Accept-Language': 'zh-cn',
             'Accept-Encoding': 'gzip, deflate, br',
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/604.5.6 (KHTML, like Gecko) Version/11.0.3 Safari/604.5.6'
+            'Upgrade-Insecure-Requests': '1',
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-User': '?1'
         }
         mongo_url = os.getenv('MONGO_URL') or 'mongodb://127.0.0.1:27017'
         client = pymongo.MongoClient(mongo_url)
@@ -166,7 +169,11 @@ class WeiboSpider():
             w_id = f_d.get('weibo_id')[0]
             url = 'https://m.weibo.cn/detail/'+ str(w_id)
 
-        response = self.session.get(url, headers=self.headers, verify=False, timeout=60)
+        cookie = "_ga=GA1.2.1005202506.1568940735; SSOLoginState=1571102629; ALF=1573694629; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WhadzuXAcR_n3vQEwXKCWU-5JpX5KMhUgL.FoqEehB0S020S0e2dJLoI0qLxK-LBKeLB-zLxKqL1--L1KMLxKBLB.eL1-2LxKqL1-eL1h.LxKML12eLB-zLxKML1-2L1hBt; SUHB=0P1MYm06KSwziP; _T_WM=80205869925; MLOGIN=1;XSRF-TOKEN=592133;"
+        cookie_dict = {i.split("=")[0]:i.split("=")[-1] for i in cookie.split("; ")}
+        print(cookie_dict)
+        response = self.session.get(url, headers=self.headers, verify=False, timeout=60, cookies=cookie_dict)
+        print(response.text)
         data = re.findall(r'render_data = ([\s\S]*?)\[0\] \|\| \{\};', response.text)
         status = json.loads(data[0])
         if len(status) > 0:
@@ -218,7 +225,12 @@ def test1():
     sp.getUserHome('1950132797')
     f = open('abc.txt')
     sp.parseWebHTML(f.read())
-    
+
+def test2():
+    sp = WeiboSpider()
+    url = "http://m.weibo.cn/status/4427334087651512?display=0&retcode=6102"
+    d = sp.getWeiboByUrl(url)
+    print(d)
 
 if __name__ == "__main__":
-#    test1()
+    test2()
