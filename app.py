@@ -88,7 +88,7 @@ def getJianshu(url):
     return res
 
 @app.route('/jianshu', methods=['POST'])
-def laohu():
+def jianshu():
     data = request.get_json()
     url = data.get('url')
     res = getJianshu.delay(url)
