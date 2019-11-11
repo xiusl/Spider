@@ -125,6 +125,136 @@ class Spider():
             time.sleep(wait)
         return ims
 
+    def paraseJianShu1(self, data):
+        html = etree.HTML(data)
+
+        title = html.xpath('//h1/text()')
+        try:
+            title = title[0]
+        except Exception as e:
+            print(e)
+        print(title)
+
+        author = html.xpath('//a[contains(@href, "/u/")]/text()')
+        try:
+            author = author[0]
+        except Exception as e:
+            print(e)
+        print(author)
+
+        author_id = html.xpath('//a[contains(@href, "/u/")]/@href')
+        try:
+            author_id = author_id[0]
+            author_id = author_id.replace('https://www.jianshu.com/u/', '')
+        except Exception as e:
+            print(e)
+
+        print(author_id)
+
+        time = html.xpath('//time/text()')
+        try:
+            time = time[0]
+            pub = datetime.datetime.strptime(time, '%Y.%m.%d %H:%M:%S')
+        except Exception as e:
+            pub = datetime.datetime.now()
+            print(e)
+
+
+        content1 = html.xpath('//article')
+        content = etree.tostring(content1[0], encoding="utf8", pretty_print=True, method="html")
+        content = content.decode('utf8')
+        print(content)
+
+        images = html.xpath('//div[@class="image-view"]/img/@data-original-src')
+        images = [im[2:] for im in images]
+        print(images)
+        ims = self._uploadImages(images)
+
+        trans_cont = content
+        for i, im_url in enumerate(images):
+            new_url = ims[i]
+            re_url = "data-original-src=\""+im_url+"\""
+            my_url = "src=\""+new_url+"\""
+            trans_cont = content.replace(re_url,my_url)
+
+        print(trans_cont)
+
+        sa = {
+            "title": title,
+            "content": content,
+            "transcoding": trans_cont,
+            "original_url": self.url,
+            "original_id": "",
+            "author": author ,
+            "author_idf": author_id,
+            "published_at": pub,
+            "created_at": datetime.datetime.utcnow(),
+            "type": 'jianshu',
+            "images": ims
+        }
+
+      #  ins_id = self._save(sa)
+        print(sa)
+        #print('insert ok %s' % ins_id)
+       # return {'id':str(ins_id)}
+
+    def paraseJianShu(self, data):
+        html = etree.HTML(data)
+        a = html.xpath('//script[@type="application/json"]/text()')
+        a = self._fixText(a)
+
+        b = json.loads(a)
+        note = b.get('props').get('initialState').get('note').get('data')
+        free_content = note.get('free_content')
+        # print(free_content)
+
+        u = note.get('user')
+
+        title = note.get('public_title')
+        author = u.get('nickname')
+        author_id = u.get('id')
+        ori_id = note.get('id')
+        pub = note.get('first_shared_at')
+        pub = datetime.datetime.utcfromtimestamp(int(pub))
+    
+        trans_cont = free_content
+        
+        e_cont = etree.HTML(trans_cont)
+        images = e_cont.xpath('//img/@data-original-src')
+        images = ['http:'+im for im in images]
+        ims = self._uploadImages(images)
+
+        for i, im_url in enumerate(images):
+            new_url = ims[i]
+            re_url = "data-original-src=\""+im_url+"\""
+            my_url = "src=\""+new_url+"\""
+            trans_cont = trans_cont.replace(re_url,my_url)
+
+        # print(trans_cont)
+
+        sa = {
+            "title": title,
+            "content": free_content,
+            "transcoding": trans_cont,
+            "original_url": self.url,
+            "original_id": ori_id,
+            "author": author ,
+            "author_idf": author_id,
+            "published_at": pub,
+            "created_at": datetime.datetime.utcnow(),
+            "type": 'jianshu',
+            "images": ims
+        }
+
+        ins_id = self._save(sa)
+        # print(sa)
+        # print('insert ok %s' % ins_id)
+        return {'id':str(ins_id)}
+
+
+
+
+
     def paraseDataLaohu(self, data):
         html = etree.HTML(data)
         
@@ -179,6 +309,8 @@ class Spider():
 
 
 #sp = Spider()
-#data = sp.getHtmlByFile('/Users/xiusl/Desktop/laohu.htm')
+#data = sp.getHtmlByFile('/Users/xiusl/Desktop/jian.html')
 #sp.paraseDataLaohu(data)
+#data = sp.getHtmlByUrl('https://www.jianshu.com/p/ce744d3f6af5')
+#sp.paraseJianShu(data)
 

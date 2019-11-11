@@ -80,6 +80,20 @@ def laohu():
     res = getLaohu.delay(url)
     return {'id':"12312"}
 
+@celery.task
+def getJianshu(url):
+    sp = Spider()
+    data = sp.getHtmlByUrl(url)
+    res = sp.paraseJianShu(data)
+    return res
+
+@app.route('/jianshu', methods=['POST'])
+def laohu():
+    data = request.get_json()
+    url = data.get('url')
+    res = getJianshu.delay(url)
+    return res
+
 
 if __name__ == '__main__':
     app.run(port=5001)

@@ -13,16 +13,20 @@ import os
 import pymongo
 from weibo_config import Config
 from utils import ImageTool
+from lxml import etree
 
 class WeiboSpider():
 
     def __init__(self):
         self.session = requests.session()
         self.headers = {
-            'Accept': 'application/json, text/plain, */*',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
             'Accept-Language': 'zh-cn',
             'Accept-Encoding': 'gzip, deflate, br',
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/604.5.6 (KHTML, like Gecko) Version/11.0.3 Safari/604.5.6'
+            'Upgrade-Insecure-Requests': '1',
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-User': '?1'
         }
         mongo_url = os.getenv('MONGO_URL') or 'mongodb://127.0.0.1:27017'
         client = pymongo.MongoClient(mongo_url)
@@ -84,6 +88,76 @@ class WeiboSpider():
         print('login success')
         return True
 
+    def getUserHome(self, user_id):
+        url = "https://weibo.com/u/"+user_id+"?"
+        params = {
+            "pids": "Pl_Official_MyProfileFeed__20",
+            "is_all": 1,
+            "profile_ftype": 1,
+            "page": 1,
+            "ajaxpagelet": 1,
+            "ajaxpagelet_v6": 1,
+        }
+        url = url + urllib.parse.urlencode(params)
+        response = self.session.get(url, headers=self.headers, verify=False, timeout=60)
+        with open("abc.txt",'w') as fw:
+            fw.write(response.text)
+        return self.parseWebHTML(response.text)
+
+    def parseWebHTML(self, html):
+        html = html.replace('<script>parent.FM.view(', '')
+        html = html.replace(')</script>', '')
+
+        json_html = json.loads(html)
+        html = json_html.get('html')
+
+        et = etree.HTML(html)
+        details = et.xpath('//div[contains(@class, "WB_detail")]')
+
+
+        des = []
+        for de in details:
+
+            info = de.xpath('./div[contains(@class, "WB_info")]/a/text()')
+            username = ''.join(info).strip()
+
+            text = de.xpath('./div[contains(@class, "WB_text")]/text()')
+            text = ''.join(text).strip()
+
+            created_at = de.xpath('./div[contains(@class, "WB_from")]/a/@date')
+            created_at = ''.join(created_at).strip()
+            created_at = datetime.datetime.fromtimestamp(int(created_at)/1000)
+
+            ims = de.xpath('.//img/@src')
+            fims = []
+            for im in ims:
+                if 'h5' in im:
+                    continue
+                if 'sinaimg.cn' in im:
+                    fims.append(im)
+
+            video = de.xpath('./div[contains(@class, "WB_media_wrap")]/div[@class="media_box"]/ul[contains(@class, "WB_media_a")]/li[contains(@class, "WB_video")]/@video-sources')
+            video = ''.join(video).strip()
+            video = urllib.parse.unquote(urllib.parse.unquote(video))
+            video = video.split(',')
+            if len(video) > 0:
+                video = video[0]
+                video = video.replace('fluency=', '')
+            else:
+                video = ''
+
+            result = {
+                "name": username,
+                "text": text,
+                "created_at": created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "images": fims,
+                "video": video
+            }
+            des.append(result)
+
+
+        with open('dd.json', 'w') as dw:
+            dw.write(json.dumps(des, ensure_ascii=False, indent=4))
 
     def getWeiboByUrl(self, url):
         if "weibointl" in url:
@@ -135,3 +209,26 @@ class WeiboSpider():
         inid = article.insert_one(sa).inserted_id
         return {'id':str(inid)}
 
+
+def test():
+    url = "https://m.weibo.cn/detail/4427334087651512"
+    sp = WeiboSpider()
+    sp.login('xiushilin@sina.cn', 'Wb110120#')
+    d = sp.getWeiboByUrl(url)
+    print(d)
+
+def test1():
+    sp = WeiboSpider()
+    sp.login("", "")
+    sp.getUserHome('1950132797')
+    f = open('abc.txt')
+    sp.parseWebHTML(f.read())
+
+def test2():
+    sp = WeiboSpider()
+    url = "http://m.weibo.cn/status/4427334087651512?display=0&retcode=6102"
+    d = sp.getWeiboByUrl(url)
+    print(d)
+
+if __name__ == "__main__":
+    test2()
