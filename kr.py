@@ -47,6 +47,24 @@ class KrSpider(object):
             return data
         return "error"
 
+    def parasePersonList(self, ID):
+        url = "https://36kr.com/pp/api/search-column/authorpage?user_id={0}&page=1&per_page=50".format(ID)
+        con = self.html(url)
+        data = con.get('data').get('items')
+
+        arts = []
+        for d in data:
+            ID = d.get('id')
+            title = d.get('title')
+            user_id = d.get('user_id')
+            user_name = ''
+            url = "https://36kr.com/p/"+str(ID)
+            arts.append({'title':title, 'a_id': str(ID), 'url': url, 'user_id': str(user_id), 'user_name': user_name})
+        
+        self.db.insert_many(arts)
+
+
+
     def paraseList(self, html):
         con = json.loads(html)
         data = con.get('data').get('items')
@@ -229,5 +247,9 @@ def spiderOne():
     sp = KrSpider()
     sp.spider_formdb()
 
+def spiderUser(ID)
+    sp = KrSpirder()
+    sp.parasePersonList(ID)
+
 if __name__ == '__main__':
-    spiderOne()
+    spiderUser('1864046570')
