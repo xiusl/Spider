@@ -183,7 +183,7 @@ class KrSpider(object):
         proxy = self.get_proxy().get('proxy')
         resp = self.session.get(url, headers=self.headers, proxies={"http": "http://{}".format(proxy)})
         content = resp.content
-        mime_type = resp.headers['Content-Type']
+        mime_type = resp.headers.get('Content-Type')
         return (content, mime_type)
 
     def _fixText(self, text):
@@ -194,10 +194,10 @@ class KrSpider(object):
         data = self.db.find()
         article = self.db2.article
         for d in data:
+            url = d.get('url')
             if d.get('exsit') and d.get('exsit') == '1':
                 print('exsit: {0}'.format(url))
                 continue
-            url = d.get('url')
             f = article.find_one({'original_url': url})
             if f:
                 self.db.update_one({'url': url}, {"$set":{"exsit": '1'}})
