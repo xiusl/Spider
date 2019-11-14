@@ -180,7 +180,7 @@ class KrSpider(object):
         return ims
 
     def _downloadImg(self, url):
-        proxy = self.get_proxy()
+        proxy = self.get_proxy().get('proxy')
         resp = self.session.get(url, headers=self.headers, proxies={"http": "http://{}".format(proxy)})
         content = resp.content
         mime_type = resp.headers['Content-Type']
