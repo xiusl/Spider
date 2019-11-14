@@ -88,7 +88,7 @@ class KrSpider(object):
         return cursor
 
     def next(self, cursor):
-        url = "https://36kr.com/pp/api/motif/465/entities?per_page=20&b_id="+str(cursor)
+        url = "https://36kr.com/pp/api/motif/331/entities?per_page=20&b_id="+str(cursor)
         data = self.html(url)
         cursor = self.paraseList(data)
         if cursor == "error":
@@ -194,9 +194,13 @@ class KrSpider(object):
         data = self.db.find()
         article = self.db2.article
         for d in data:
+            if d.get('exsit') and d.get('exsit') == '1':
+                print('exsit: {0}'.format(url))
+                continue
             url = d.get('url')
             f = article.find_one({'original_url': url})
             if f:
+                self.db.update_one({'url': url}, {"$set":{"exsit": '1'}})
                 print('exsit: {0}'.format(url))
                 continue
             print('start: {0}'.format(url))
@@ -216,7 +220,7 @@ def test():
 
 def getList():
     sp = KrSpider()
-    url = "https://36kr.com/pp/api/motif/465/entities?per_page=20"
+    url = "https://36kr.com/pp/api/motif/331/entities?per_page=20"
     data = sp.html(url)
     cursor = sp.paraseList(data)
     sp.next(cursor)
