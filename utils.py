@@ -44,6 +44,7 @@ class ImageTool():
 
     def upload(self, image, mime_type='jpg'):
         file_name = self._fileMD5(image)
+        file_name = 'spider/'+file_name
         resp = self.client.put_object(
                     Bucket='shilin-1255431184',
                     Body=image,
