@@ -27,6 +27,7 @@ class Spider():
         self.ex = ['axing', 'bxing', 'cxing', 'dxing', 'exing', 'langsongAuthor', 'langsongAuthorPY', 
             'pinglunCount', 'beijingIspass', 'shangIspass', 'yizhuIspass', 'yizhuYuanchuang']
 
+        self.count = 50
         
     def _init_db(self):
         mongo_url = 'mongodb://127.0.0.1:27017'
@@ -111,6 +112,7 @@ class Spider():
     def parase2(self, data):
         data = data.decode('utf-8')
         d = json.loads(data)
+        self.count = d.get('sumCount') or 50
         li = d.get('tb_gushiwens')
         for l in li:
             a = l
@@ -130,7 +132,7 @@ class Spider():
 
     def ss(self):
         b_url = 'http://app.gushiwen.cn/api/author/Default10.aspx?token=gswapi&page='
-        for i in range(1, 101):
+        for i in range(1, self.count / 10):
             url = b_url+str(i)
             data = self.getHtmlByUrl(url)
             self.parase(data)
@@ -140,7 +142,7 @@ class Spider():
     def ss2(self, uid):
         #uid = '6888D54DC01ADF87C8193C8ED94E9BFE'
         b_url = 'https://app.gushiwen.cn/api/author/authorsw11.aspx?token=gswapi&id='+uid+'&page='
-        for i in range(1, 101):
+        for i in range(1, self.count / 10):
             url = b_url+str(i)
             print(url)
             data = self.getHtmlByUrl(url)
@@ -152,7 +154,7 @@ class Spider():
         aut = self.db.author_a
         ds = aut.find()
         ids = []
-        oids = ['6888D54DC01ADF87C8193C8ED94E9BFE']
+        oids = ['6888D54DC01ADF87C8193C8ED94E9BFE', 'ACED84F2F3C2DEE0868E66E2F9DB18F4', '6911E98663CC56F9099A93D520AA2373', '19D5441382902DEA28FCFC1BB339B6FC', '37E32BAC4B670CF3DD527F1283C55042', '2B0F6E397BC8C61FE7A5DDBEFFC4A9C1', 'D97000E67A4E671D1D6EA5139B213765', '463BCE18212081C858CD02E3A8A51ED7', '29DCCC0D633A647C3707C8FBACB98BC3', '62BDA354811022A967718F87D53E8A57', '7D96E28ADE5BB3C02EE18A8DE47BA04F', '8D23D4EFC54F72C2385F0DF98A17F5A2', '5A157AEC67B3D27369B9F3E972CBCD1B']
         for d in ds:
             idd = d.get('idnew')
             if idd in oids:
