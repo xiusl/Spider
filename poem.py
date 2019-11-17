@@ -148,11 +148,18 @@ class Spider():
             wait = random.random()
             time.sleep(wait)
 
+    def ss3(self):
+        aut = self.db.author_a
+        ds = aut.find()
+        for d in ds:
+            print(d)
+            break
+
 
 # https://so.gushiwen.org/authors/
 
 sp = Spider()
 #data = sp.getHtmlByFile('/Users/xiusl/Desktop/b.htm')
 #sp.paraseAuthor(data)
-sp.ss2()
+sp.ss3()
 
