@@ -46,9 +46,12 @@ class Spider():
         self.url = url
         proxy = self.get_proxy().get('proxy')
         proxies = {"http": "http://{}".format(proxy)}
-        response = self.session.get(url, headers=self.headers, verify=False, proxies=proxies)
-        data = response.content
-        response.encoding = "utf-8"
+        try:
+            response = self.session.get(url, headers=self.headers, verify=False, proxies=proxies)
+            data = response.content
+            response.encoding = "utf-8"
+        except:
+            return self.getHtmlByUrl(url)
         return data
 
     def getHtmlByFile(self, path):
@@ -102,7 +105,27 @@ class Spider():
         for l in li:
             self.save(l)
 
+    ex = ['axing', 'bxing', 'cxing', 'dxing', 'exing', 'langsongAuthor', 'langsongAuthorPY', 
+            'pinglunCount', 'beijingIspass', 'shangIspass', 'yizhuIspass', 'yizhuYuanchuang',
+            '']
+    def parase2(self, data):
+        data = data.decode('utf-8')
+        d = json.loads(data)
+        li = d.get('tb_gushiwens')
+        for l in li:
+            a = l
+            for b in ex:
+                a.pop(b)
+            self.save2(a)
 
+    def save2(self, data):
+        aut = self.db.poem_a
+        a = aut.find_one({'idnew': data['idnew']})
+        if a:
+            print('exsit')
+        else:
+            ins_id = aut.insert_one(data).inserted_id
+            print(ins_id)
 
     def ss(self):
         b_url = 'http://app.gushiwen.cn/api/author/Default10.aspx?token=gswapi&page='
@@ -113,11 +136,22 @@ class Spider():
             wait = random.random()
             time.sleep(1+wait)
 
+    def ss2(self):
+        uid = '6888D54DC01ADF87C8193C8ED94E9BFE'
+        b_url = 'https://app.gushiwen.cn/api/author/authorsw11.aspx?token=gswapi&id='+uid+'&page='
+        for i in range(1, 101):
+            url = b_url+str(i)
+            print(url)
+            data = self.getHtmlByUrl(url)
+            self.parase2(data)
+            wait = random.random()
+            time.sleep(wait)
+
 
 # https://so.gushiwen.org/authors/
 
 sp = Spider()
 #data = sp.getHtmlByFile('/Users/xiusl/Desktop/b.htm')
 #sp.paraseAuthor(data)
-sp.ss()
+sp.ss2()
 
