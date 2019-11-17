@@ -137,8 +137,8 @@ class Spider():
             wait = random.random()
             time.sleep(1+wait)
 
-    def ss2(self):
-        uid = '6888D54DC01ADF87C8193C8ED94E9BFE'
+    def ss2(self, uid):
+        #uid = '6888D54DC01ADF87C8193C8ED94E9BFE'
         b_url = 'https://app.gushiwen.cn/api/author/authorsw11.aspx?token=gswapi&id='+uid+'&page='
         for i in range(1, 101):
             url = b_url+str(i)
@@ -151,9 +151,18 @@ class Spider():
     def ss3(self):
         aut = self.db.author_a
         ds = aut.find()
+        ids = []
+        oids = ['6888D54DC01ADF87C8193C8ED94E9BFE']
         for d in ds:
-            print(d)
-            break
+            idd = d.get('idnew')
+            if idd in oids:
+                continue
+            print(ids)
+            self.ss2(idd)
+            ids.append(idd)
+            wait = random.random()
+            time.sleep(wait)
+
 
 
 # https://so.gushiwen.org/authors/
