@@ -48,9 +48,7 @@ class Spider():
         proxies = {"http": "http://{}".format(proxy)}
         response = self.session.get(url, headers=self.headers, verify=False, proxies=proxies)
         data = response.content
-        print(response.encoding)
         response.encoding = "utf-8"
-        print(response.text)
         return data
 
     def getHtmlByFile(self, path):
@@ -97,8 +95,6 @@ class Spider():
             print(ins_id)
 
     def parase(self, data):
-        print(type(data))
-        print(data)
         data = data.decode('utf-8')
         d = json.loads(data)
         
