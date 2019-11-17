@@ -24,6 +24,8 @@ class Spider():
         }
         self._init_db()
         #self.im_tool = ImageTool()
+        self.ex = ['axing', 'bxing', 'cxing', 'dxing', 'exing', 'langsongAuthor', 'langsongAuthorPY', 
+            'pinglunCount', 'beijingIspass', 'shangIspass', 'yizhuIspass', 'yizhuYuanchuang']
 
         
     def _init_db(self):
@@ -51,7 +53,8 @@ class Spider():
             data = response.content
             response.encoding = "utf-8"
         except:
-            return self.getHtmlByUrl(url)
+            print(url)
+            return "123"
         return data
 
     def getHtmlByFile(self, path):
@@ -105,17 +108,15 @@ class Spider():
         for l in li:
             self.save(l)
 
-    ex = ['axing', 'bxing', 'cxing', 'dxing', 'exing', 'langsongAuthor', 'langsongAuthorPY', 
-            'pinglunCount', 'beijingIspass', 'shangIspass', 'yizhuIspass', 'yizhuYuanchuang',
-            '']
     def parase2(self, data):
         data = data.decode('utf-8')
         d = json.loads(data)
         li = d.get('tb_gushiwens')
         for l in li:
             a = l
-            for b in ex:
-                a.pop(b)
+            for b in self.ex:
+                if b in a.keys():
+                    a.pop(b)
             self.save2(a)
 
     def save2(self, data):
