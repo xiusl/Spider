@@ -28,12 +28,22 @@ class Spider():
             'pinglunCount', 'beijingIspass', 'shangIspass', 'yizhuIspass', 'yizhuYuanchuang']
 
         self.count = 50
+        self._init_oids()
         
     def _init_db(self):
         mongo_url = 'mongodb://127.0.0.1:27017'
         client = pymongo.MongoClient(mongo_url)
         db = client['poem_db']
         self.db = db
+
+    def _init_oids(self):
+        with open('./oids.txt') as f:
+            a = f.read()
+            a = a.replace(' ', '')
+            d = a.split(',')
+            e = [ x[1:-1] for x in d]
+            self.oids = e
+
 
     def _fixText(self, text):
         new_t = ''.join(text)
@@ -154,10 +164,9 @@ class Spider():
         aut = self.db.author_a
         ds = aut.find()
         ids = []
-        oids = ['6888D54DC01ADF87C8193C8ED94E9BFE', 'ACED84F2F3C2DEE0868E66E2F9DB18F4', '6911E98663CC56F9099A93D520AA2373', '19D5441382902DEA28FCFC1BB339B6FC', '37E32BAC4B670CF3DD527F1283C55042', '2B0F6E397BC8C61FE7A5DDBEFFC4A9C1', 'D97000E67A4E671D1D6EA5139B213765', '463BCE18212081C858CD02E3A8A51ED7', '29DCCC0D633A647C3707C8FBACB98BC3', '62BDA354811022A967718F87D53E8A57', '7D96E28ADE5BB3C02EE18A8DE47BA04F', '8D23D4EFC54F72C2385F0DF98A17F5A2', '5A157AEC67B3D27369B9F3E972CBCD1B']
         for d in ds:
             idd = d.get('idnew')
-            if idd in oids:
+            if idd in self.oids:
                 continue
             print(ids)
             self.ss2(idd)
