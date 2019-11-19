@@ -28,13 +28,36 @@ class Spider():
             'pinglunCount', 'beijingIspass', 'shangIspass', 'yizhuIspass', 'yizhuYuanchuang']
 
         self.count = 50
-        self._init_oids()
+    #    self._init_oids()
+        self.bad_url = []
         
     def _init_db(self):
         mongo_url = 'mongodb://127.0.0.1:27017'
         client = pymongo.MongoClient(mongo_url)
         db = client['poem_db']
         self.db = db
+
+    def agents(self):
+        li = ["Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1",
+              "Mozilla/5.0 (X11; CrOS i686 2268.111.0) AppleWebKit/536.11 (KHTML, like Gecko) Chrome/20.0.1132.57 Safari/536.11",
+              "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6",
+              "Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1090.0 Safari/536.6",
+              "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/19.77.34.5 Safari/537.1",
+              "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.9 Safari/536.5",
+              "Mozilla/5.0 (Windows NT 6.0) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.36 Safari/536.5",
+              "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.3 (KHTML, like Gecko) Chrome/19.0.1063.0 Safari/536.3",
+              "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/536.3 (KHTML, like Gecko) Chrome/19.0.1063.0 Safari/536.3",
+              "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_0) AppleWebKit/536.3 (KHTML, like Gecko) Chrome/19.0.1063.0 Safari/536.3",
+              "Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.3 (KHTML, like Gecko) Chrome/19.0.1062.0 Safari/536.3",
+              "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.3 (KHTML, like Gecko) Chrome/19.0.1062.0 Safari/536.3",
+              "Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.3 (KHTML, like Gecko) Chrome/19.0.1061.1 Safari/536.3",
+              "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.3 (KHTML, like Gecko) Chrome/19.0.1061.1 Safari/536.3",
+              "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/536.3 (KHTML, like Gecko) Chrome/19.0.1061.1 Safari/536.3",
+              "Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.3 (KHTML, like Gecko) Chrome/19.0.1061.0 Safari/536.3",
+              "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.24 (KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24",
+              "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/535.24 (KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24",]
+        return random.choice(li)
+
 
     def _init_oids(self):
         with open('./oids.txt') as f:
@@ -59,11 +82,13 @@ class Spider():
         self.url = url
         proxy = self.get_proxy().get('proxy')
         proxies = {"http": "http://{}".format(proxy)}
+        self.headers['User-Agent'] = self.agents()
         try:
             response = self.session.get(url, headers=self.headers, verify=False, proxies=proxies)
             data = response.content
             response.encoding = "utf-8"
         except:
+            self.bad_url.append(url)
             print(url)
             return "123"
         return data
@@ -131,6 +156,43 @@ class Spider():
                     a.pop(b)
             self.save2(a)
 
+
+    def parase_fy(self, data, url):
+        data = data.decode('utf-8')
+        try:
+            d = json.loads(data)
+            a = d.get('tb_gushiwen')
+            yizhu = a.get('yizhu')
+            idd = a.get('idnew')
+            type = a.get('type')
+
+            b = d.get('tb_fanyis')('fanyis')
+            if len(b) > 0:
+                fy = b[0]
+                fyd = {'oid':idd,'author':fy.get('nameStr'),'name': fy.get('nameStr'), 'yuanchuang': fy.get('isYuanchuang'), 'cankao': fy.get('cankao'), 'cont': fy.get('cont')}
+                self.save_fy(fyd)
+
+            self.upGs(yizhu, idd, type)
+        except:
+            print('jsonload error')
+            self.bad_url.append(url)
+
+
+    def upGs(self, yizhu, idd , ty):
+        aut = self.db.poem_a
+        aut.update_one({'idnew': idd}, {'$set':{'type':ty, 'yizhu': yizhu}})
+    
+    def save_fy(self, data):
+        fy_col = self.db.fy_a
+        fy = fy_col.find_one({'oid': data['oid']})
+        if fy:
+            print('exsit')
+        else:
+            ins_id = fy_col.insert_one(data).inserted_id
+            print(ins_id)
+
+        
+
     def save2(self, data):
         aut = self.db.poem_a
         a = aut.find_one({'idnew': data['idnew']})
@@ -174,6 +236,23 @@ class Spider():
             wait = random.random()
             time.sleep(wait)
 
+    def ss4(self):
+        aut = self.db.poem_a
+        ds = aut.find()
+        b_url = 'https://app.gushiwen.cn/api/shiwen/shiwenv11.aspx?token=gswapi&id='
+        for d in ds:
+            idd = d.get('idnew')
+            url = b_url+idd
+            data = self.getHtmlByUrl(url)
+            self.parase_fy(data, url)
+            wait = random.random()
+            print('wait: {}'.format(wait+1))
+            print('self.bad_url')
+            time.sleep(wait+1)
+            
+
+        with open('./a.py', 'w') as f:
+            f.write(','.join(self.bad_url))
 
 
 # https://so.gushiwen.org/authors/
