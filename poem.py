@@ -11,6 +11,9 @@ import os
 from lxml import etree
 from utils import ImageTool
 
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+# 禁用安全请求警告
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 class Spider():
 
@@ -166,7 +169,7 @@ class Spider():
             idd = a.get('idnew')
             type = a.get('type')
 
-            b = d.get('tb_fanyis')('fanyis')
+            b = d.get('tb_fanyis').get('fanyis')
             if len(b) > 0:
                 fy = b[0]
                 fyd = {'oid':idd,'author':fy.get('nameStr'),'name': fy.get('nameStr'), 'yuanchuang': fy.get('isYuanchuang'), 'cankao': fy.get('cankao'), 'cont': fy.get('cont')}
