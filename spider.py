@@ -108,10 +108,15 @@ class Spider():
         print('insert ok %s' % ins_id)
         return {'id':str(ins_id)}
 
-    def _save(self, data):
+    def _save2(self, data):
         article = self.db.article
         insid = article.insert_one(data).inserted_id
         return {'id':str(insid)}
+
+    def _save(self, data):
+        url = 'https://ins-api.sleen.top/spider/article'
+        self.session.post(url, headers=self.headers, data=json.dumps(json_obj))
+        return {'id': '123')}
 
     def _uploadImages(self, images):
         ims = []
