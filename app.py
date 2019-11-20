@@ -79,7 +79,7 @@ def laohu():
     data = request.get_json()
     url = data.get('url')
     res = getLaohu.delay(url)
-    return res
+    return {'id': str(res.id)}
 
 @celery.task
 def getJianshu(url):

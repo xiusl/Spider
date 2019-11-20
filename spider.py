@@ -9,7 +9,7 @@ import time
 import random
 import os
 from lxml import etree
-from utils import ImageTool
+from utils import ImageTool, DateEncoder
 
 
 class Spider():
@@ -115,8 +115,11 @@ class Spider():
 
     def _save(self, data):
         url = 'https://ins-api.sleen.top/spider/article'
-        self.session.post(url, headers=self.headers, data=json.dumps(json_obj))
-        return {'id': '123')}
+        #url = 'http://127.0.0.1:5000/spider/article'
+        d = {'article': json.dumps(data, cls=DateEncoder)}
+        da = json.dumps(d)
+        res = self.session.post(url, headers={'Content-Type':'application/json'}, data=da)
+        return {'id': '123'}
 
     def _uploadImages(self, images):
         ims = []
@@ -304,8 +307,6 @@ class Spider():
         }
 
         ins_id = self._save(sa)
-        print(sa)
-        print('insert ok %s' % ins_id)
         return {'id':str(ins_id)}
 
 
