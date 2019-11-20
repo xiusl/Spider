@@ -2,6 +2,8 @@
 # author:xsl
 
 import os
+import json
+import datetime
 import hashlib
 import requests
 from qcloud_cos import CosConfig, CosS3Client
@@ -54,6 +56,17 @@ class ImageTool():
                 )
         return self.baseUrl + file_name
 
+
+class DateEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return obj.strftime('%Y-%m-%d %H:%M:%S')
+
+        elif isinstance(obj, datetime.date):
+            return obj.strftime("%Y-%m-%d")
+
+        else:
+            return json.JSONEncoder.default(self, obj)
 
 #url = 'https://img-blog.csdnimg.cn/20190102174111248.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MTgxNzAzNA==,size_16,color_FFFFFF,t_70'
 

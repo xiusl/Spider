@@ -146,7 +146,14 @@ class WechatSpider():
             "type": 'wechat',
             "images": ims
         }
-        inid = self.art_col.insert_one(sa).inserted_id
+        self._save(sa)
         return {'id':str(inid)}
  
+    def _save(self, data):
+        url = 'https://ins-api.sleen.top/spider/article'
+        #url = 'http://127.0.0.1:5000/spider/article'
+        d = {'article': json.dumps(data, cls=DateEncoder)}
+        da = json.dumps(d)
+        res = self.session.post(url, headers={'Content-Type':'application/json'}, data=da)
+        return {'id': '123'}
 
