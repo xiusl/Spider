@@ -3,6 +3,7 @@
 
 import requests
 import json
+import re
 import pymongo
 import datetime
 import time
@@ -196,6 +197,98 @@ class Spider():
         self._save(sa)
         return {'id':"123"}
 
+    def paraseWechat(self, data):
+        html = etree.HTML(data)
+
+        date = re.findall(r'ct\s*=\s*\"[0-9]*\"', data)
+        if len(date) > 0:
+            date = date[0]
+        date = re.findall(r'\"[0-9]*\"', date)[0]
+        date = date[1:-1]
+        times = datetime.datetime.utcfromtimestamp(int(date))
+        
+        title = html.xpath('//h2[@id="activity-name"]/text()')
+        title = self._fixText(title)
+
+        author = html.xpath('//span[@id="js_author_name"]/text()')
+        author = self._fixText(author)
+
+        wx_name = html.xpath('//a[@id="js_name"]/text()')
+        wx_name = self._fixText(wx_name)
+#        print(wx_name)
+
+        meta_content = html.xpath('//div[@id="meta_content"]')
+        author2 = author
+        if len(meta_content) > 0:
+            meta_content = meta_content[0]
+            author2 = meta_content.xpath('./span[contains(@class, "rich_media_meta_text")]//text()')
+            author2 = self._fixText(author2)
+            author2 = author2.replace(' ','')
+            author2 = author2.replace('\n','')
+#            print(author2)
+
+        wx_info = html.xpath('//div[@class="profile_inner"]/p[@class="profile_meta"]')
+
+        info1 = wx_info[0]
+        info_title = info1.xpath('./label/text()')
+        info_title = self._fixText(info_title)
+
+        info_value1 = info1.xpath('./span/text()')
+        info_value1 = self._fixText(info_value1)
+
+        info1 = wx_info[1]
+        info_title = info1.xpath('./label/text()')
+        info_title = self._fixText(info_title)
+
+        info_value = info1.xpath('./span/text()')
+        info_value = self._fixText(info_value)
+
+
+        content1 = html.xpath('//div[@id="js_content"]')[0]
+
+        content = etree.tostring(content1,encoding="utf8", pretty_print=True, method="html")
+        content = content.decode('utf-8')
+        content = re.sub(r' style=\"(.*?)\"', "", content)
+        content = re.sub(r'<p><br></p>', "", content)
+        content = re.sub(r'<p><span><br></span></p>', "", content)
+
+        images = html.xpath('//img/@data-src')
+        ims = []
+        for im_url in images:
+            im, typ = self.im_tool.download(im_url)
+            n_url = self.im_tool.upload(im, typ)
+            ims.append(n_url)
+            wwait = random.random()
+            time.sleep(wwait)
+
+        trans_cont = content
+        i = 0
+        for im_url2 in images:
+            myimurl = ims[i]
+            re_url1 = "data-src=\"" + im_url2 + "\""
+            re_url2 = "src=\"" + im_url2 + "\""
+            my_re = "src=\"" + myimurl + "\""
+            trans_cont = trans_cont.replace(re_url1, my_re)
+            trans_cont = trans_cont.replace(re_url2, my_re)
+            i += 1
+
+        content = re.sub(r'<(.*?)>', '', content)
+
+        sa = {
+            "title": title,
+            "content": content,
+            "transcoding": trans_cont,
+            "original_url": self.url,
+            "original_id": "",
+            "author": wx_name+' '+author ,
+            "author_idf": str(info_value1),
+            "published_at": times,
+            "created_at": datetime.datetime.utcnow(),
+            "type": 'wechat',
+            "images": ims
+        }
+        self._save(sa)
+        return {'id': '123'}
 
     def _save(self, data):
         url = 'https://ins-api.sleen.top/spider/article'
