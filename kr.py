@@ -50,6 +50,7 @@ class KrSpider(object):
     def parasePersonList(self, ID):
         url = "https://36kr.com/pp/api/search-column/authorpage?user_id={0}&page=1&per_page=50".format(ID)
         con = self.html(url)
+        con = json.loads(con)
         data = con.get('data').get('items')
 
         arts = []
@@ -247,9 +248,10 @@ def spiderOne():
     sp = KrSpider()
     sp.spider_formdb()
 
-def spiderUser(ID)
-    sp = KrSpirder()
+def spiderUser(ID):
+    sp = KrSpider()
     sp.parasePersonList(ID)
 
 if __name__ == '__main__':
-    spiderUser('1864046570')
+    #spiderUser('1864046570')
+    spiderOne()

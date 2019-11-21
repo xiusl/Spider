@@ -159,21 +159,19 @@ class WeiboSpider():
         with open('dd.json', 'w') as dw:
             dw.write(json.dumps(des, ensure_ascii=False, indent=4))
 
-    # https://m.weibo.cn/detail/4406938466619553
-    # https://weibointl.api.weibo.cn/share/92977721.html?weibo_id=4418325721135779
     def getWeiboByUrl(self, url):
-        if 'weibointl' in url:
+        if "weibointl" in url:
             f_pars = urllib.parse.urlparse(url)
             f_que = f_pars.query
             f_d = urllib.parse.parse_qs(f_que)
             w_id = f_d.get('weibo_id')[0]
             url = 'https://m.weibo.cn/detail/'+ str(w_id)
-
-        cookie = "_ga=GA1.2.1005202506.1568940735; SSOLoginState=1571102629; ALF=1573694629; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WhadzuXAcR_n3vQEwXKCWU-5JpX5KMhUgL.FoqEehB0S020S0e2dJLoI0qLxK-LBKeLB-zLxKqL1--L1KMLxKBLB.eL1-2LxKqL1-eL1h.LxKML12eLB-zLxKML1-2L1hBt; SUHB=0P1MYm06KSwziP; _T_WM=80205869925; MLOGIN=1;XSRF-TOKEN=592133;"
+        #cookie = "_ga=GA1.2.1005202506.1568940735; _T_WM=20813437200; SSOLoginState=1571102629; ALF=1573694629; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WhadzuXAcR_n3vQEwXKCWU-5JpX5KMhUgL.FoqEehB0S020S0e2dJLoI0qLxK-LBKeLB-zLxKqL1--L1KMLxKBLB.eL1-2LxKqL1-eL1h.LxKML12eLB-zLxKML1-2L1hBt; SUHB=0P1MYm06KSwziP; MLOGIN=1"
+        cookie = "_ga=GA1.2.1005202506.1568940735; SSOLoginState=1571102629; ALF=1573694629; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WhadzuXAcR_n3vQEwXKCWU-5JpX5KMhUgL.FoqEehB0S020S0e2dJLoI0qLxK-LBKeLB-zLxKqL1--L1KMLxKBLB.eL1-2LxKqL1-eL1h.LxKML12eLB-zLxKML1-2L1hBt; SUHB=0P1MYm06KSwziP; MLOGIN=1"
         cookie_dict = {i.split("=")[0]:i.split("=")[-1] for i in cookie.split("; ")}
         print(cookie_dict)
+
         response = self.session.get(url, headers=self.headers, verify=False, timeout=60, cookies=cookie_dict)
-        print(response.text)
         data = re.findall(r'render_data = ([\s\S]*?)\[0\] \|\| \{\};', response.text)
         status = json.loads(data[0])
         if len(status) > 0:

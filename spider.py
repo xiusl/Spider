@@ -24,7 +24,6 @@ class Spider():
         }
         self.im_tool = ImageTool()
 
-
     def _fixText(self, text):
         new_t = ''.join(text)
         return new_t.strip()

@@ -23,7 +23,6 @@ CORS(app, supports_credentials=True)
 def getWeibo(url):
     sp = WeiboSpider()
     data = sp.getWeiboByUrl(url)
-    print(data)
     return data
 
 @celery.task(bind=True)
@@ -79,7 +78,7 @@ def laohu():
     data = request.get_json()
     url = data.get('url')
     res = getLaohu.delay(url)
-    return {'id': str(res.id)}
+    return {'id':"12312"}
 
 @celery.task
 def getJianshu(url):
