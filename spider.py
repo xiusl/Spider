@@ -22,15 +22,8 @@ class Spider():
             'Accept-Encoding': 'gzip, deflate, br',
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/604.5.6 (KHTML, like Gecko) Version/11.0.3 Safari/604.5.6'
         }
-        self._init_db()
         self.im_tool = ImageTool()
 
-        
-    def _init_db(self):
-        mongo_url = os.getenv('MONGO_URL') or 'mongodb://127.0.0.1:27017'
-        client = pymongo.MongoClient(mongo_url)
-        db = client['instance_db']
-        self.db = db
 
     def _fixText(self, text):
         new_t = ''.join(text)
@@ -95,115 +88,17 @@ class Spider():
             "content": content,
             "transcoding": trans_cont,
             "original_url": url,
-            "original_id": original_id,
+            "original_id": str(original_id),
             "author": author ,
-            "author_idf": author_idf,
+            "author_idf": str(author_idf),
             "published_at": pub_at,
             "created_at": datetime.datetime.utcnow(),
             "type": '36kr',
             "images": ims
         }
 
-        ins_id = self._save(sa)
-        print('insert ok %s' % ins_id)
-        return {'id':str(ins_id)}
-
-    def _save2(self, data):
-        article = self.db.article
-        insid = article.insert_one(data).inserted_id
-        return {'id':str(insid)}
-
-    def _save(self, data):
-        url = 'https://ins-api.sleen.top/spider/article'
-        #url = 'http://127.0.0.1:5000/spider/article'
-        d = {'article': json.dumps(data, cls=DateEncoder)}
-        da = json.dumps(d)
-        res = self.session.post(url, headers={'Content-Type':'application/json'}, data=da)
-        return {'id': '123'}
-
-    def _uploadImages(self, images):
-        ims = []
-        for im_url in images:
-            im, typ = self.im_tool.download(im_url)
-            new_url = self.im_tool.upload(im, typ)
-            ims.append(new_url)
-            wait = random.random()
-            print('download ok %s' % new_url)
-            time.sleep(wait)
-        return ims
-
-    def paraseJianShu1(self, data):
-        html = etree.HTML(data)
-
-        title = html.xpath('//h1/text()')
-        try:
-            title = title[0]
-        except Exception as e:
-            print(e)
-        print(title)
-
-        author = html.xpath('//a[contains(@href, "/u/")]/text()')
-        try:
-            author = author[0]
-        except Exception as e:
-            print(e)
-        print(author)
-
-        author_id = html.xpath('//a[contains(@href, "/u/")]/@href')
-        try:
-            author_id = author_id[0]
-            author_id = author_id.replace('https://www.jianshu.com/u/', '')
-        except Exception as e:
-            print(e)
-
-        print(author_id)
-
-        time = html.xpath('//time/text()')
-        try:
-            time = time[0]
-            pub = datetime.datetime.strptime(time, '%Y.%m.%d %H:%M:%S')
-        except Exception as e:
-            pub = datetime.datetime.now()
-            print(e)
-
-
-        content1 = html.xpath('//article')
-        content = etree.tostring(content1[0], encoding="utf8", pretty_print=True, method="html")
-        content = content.decode('utf8')
-        print(content)
-
-        images = html.xpath('//div[@class="image-view"]/img/@data-original-src')
-        images = [im[2:] for im in images]
-        print(images)
-        ims = self._uploadImages(images)
-
-        trans_cont = content
-        for i, im_url in enumerate(images):
-            new_url = ims[i]
-            re_url = "data-original-src=\""+im_url+"\""
-            my_url = "src=\""+new_url+"\""
-            trans_cont = content.replace(re_url,my_url)
-
-        print(trans_cont)
-
-        sa = {
-            "title": title,
-            "content": content,
-            "transcoding": trans_cont,
-            "original_url": self.url,
-            "original_id": "",
-            "author": author ,
-            "author_idf": author_id,
-            "published_at": pub,
-            "created_at": datetime.datetime.utcnow(),
-            "type": 'jianshu',
-            "images": ims
-        }
-
-      #  ins_id = self._save(sa)
-        print(sa)
-        #print('insert ok %s' % ins_id)
-       # return {'id':str(ins_id)}
+        self._save(sa)
+        return {'id':'123'}
 
     def paraseJianShu(self, data):
         html = etree.HTML(data)
@@ -252,15 +147,8 @@ class Spider():
             "type": 'jianshu',
             "images": ims
         }
-
-        ins_id = self._save(sa)
-        # print(sa)
-        # print('insert ok %s' % ins_id)
-        return {'id':str(ins_id)}
-
-
-
-
+        self._save(sa)
+        return {'id':'123'}
 
     def paraseDataLaohu(self, data):
         html = etree.HTML(data)
@@ -306,8 +194,29 @@ class Spider():
             "images": ims
         }
 
-        ins_id = self._save(sa)
-        return {'id':str(ins_id)}
+        self._save(sa)
+        return {'id':"123"}
+
+
+    def _save(self, data):
+        url = 'https://ins-api.sleen.top/spider/article'
+        #url = 'http://127.0.0.1:5000/spider/article'
+        d = {'article': json.dumps(data, cls=DateEncoder)}
+        da = json.dumps(d)
+        res = self.session.post(url, headers={'Content-Type':'application/json'}, data=da)
+        print('{0}: {1}'.format(data['title'], res.status_code))
+        return {'id': '123'}
+
+    def _uploadImages(self, images):
+        ims = []
+        for im_url in images:
+            im, typ = self.im_tool.download(im_url)
+            new_url = self.im_tool.upload(im, typ)
+            ims.append(new_url)
+            wait = random.random()
+            print('download ok %s' % new_url)
+            time.sleep(wait)
+        return ims
 
 
 
