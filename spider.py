@@ -9,6 +9,7 @@ import datetime
 import time
 import random
 import os
+import html as ex_html
 from lxml import etree
 from utils import ImageTool, DateEncoder
 
@@ -40,7 +41,63 @@ class Spider():
         data = f.read()
         return data
 
-    def paraseData36kr(self, data):
+    def parseSsPi(self, data):
+        #data = ex_html.unescape(data)
+        cont = re.findall(r'window.__INITIAL_STATE__=(.*?);\(function\(\){var', data)
+        cont = cont[0]
+        cont = json.loads(cont)
+        post = cont.get('post')
+        art = post.get('articleInfo')
+
+        title = art.get('title')
+        author = art.get('author').get('nickname')
+        author_idf = str(art.get('author').get('id'))
+
+        pub_at = art.get('released_time')
+        pub_at = datetime.datetime.utcfromtimestamp(int(pub_at)) 
+
+    
+        con = art.get('body')
+        html = etree.HTML(con)
+        images = html.xpath('//img/@src')
+        ims = self._uploadImages(images)
+        
+        trans_cont = con
+        for i, im_url in enumerate(images):
+            n_url = ims[i]
+            re_url = "src=\""+im_url+"\""
+            my_url = "src=\""+n_url+"\""
+            trans_cont = trans_cont.replace(re_url,my_url)
+
+        original_id = str(art.get('id'))
+        url = 'https://sspai.com/post/'+original_id
+
+        con = con.replace('<html><head></head><body>', '')
+        con = con.replace('</body></html>', '')
+
+        trans_cont = trans_cont.replace('<html><head></head><body>', '')
+        trans_cont = trans_cont.replace('</body></html>', '')
+
+        sa = {
+            "title": title,
+            "content": con,
+            "transcoding": trans_cont,
+            "original_url": url,
+            "original_id": original_id,
+            "author": author ,
+            "author_idf": author_idf,
+            "published_at": pub_at,
+            "created_at": datetime.datetime.utcnow(),
+            "type": 'sspi',
+            "images": ims
+        }
+
+        self._save(sa)
+        return {'id':'123'}
+
+
+
+    def parseData36kr(self, data):
         html = etree.HTML(data)
 
         jses = html.xpath('//script/text()')
@@ -100,7 +157,7 @@ class Spider():
         self._save(sa)
         return {'id':'123'}
 
-    def paraseJianShu(self, data):
+    def parseJianShu(self, data):
         html = etree.HTML(data)
         a = html.xpath('//script[@type="application/json"]/text()')
         a = self._fixText(a)
@@ -150,7 +207,7 @@ class Spider():
         self._save(sa)
         return {'id':'123'}
 
-    def paraseDataLaohu(self, data):
+    def parseDataLaohu(self, data):
         html = etree.HTML(data)
         
         title = html.xpath('//h1[@class="article-title"]/text()')
@@ -197,7 +254,7 @@ class Spider():
         self._save(sa)
         return {'id':"123"}
 
-    def paraseWechat(self, data):
+    def parseWechat(self, data):
         html = etree.HTML(data)
 
         date = re.findall(r'ct\s*=\s*\"[0-9]*\"', data)
@@ -315,8 +372,6 @@ class Spider():
 
 
 #sp = Spider()
-#data = sp.getHtmlByFile('/Users/xiusl/Desktop/jian.html')
-#sp.paraseDataLaohu(data)
-#data = sp.getHtmlByUrl('https://www.jianshu.com/p/ce744d3f6af5')
-#sp.paraseJianShu(data)
-
+#data = sp.getHtmlByFile('/Users/xiusl/Desktop/abc.html')
+#data = sp.getHtmlByUrl('https://sspai.com/post/56910')
+#sp.parseSsPi(data)

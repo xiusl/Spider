@@ -54,6 +54,30 @@ def jianshu():
     return res
 
 
+@app.route('/sspi', methods=['POST'])
+def sspi():
+    data = request.get_json()
+    url = data.get('url')
+    res = getSsPi.delay(url)
+    return res
+
+@app.route('/spider', methods=['POST'])
+def spider():
+    data = request.get_json()
+    url = data.get('url')
+    res = {'res': 'nono'}
+    if 'sspai' in url:
+        res = getSsPi.delay(url)
+    elif '36kr' in url:
+        res = get36Kr.delay(url)
+    elif 'weixin' in url:
+        res = getWechat.delay(url)
+    elif 'laohu' in url:
+        res = getLaohu.delay(url)
+    elif 'jianshu' in url:
+        res = getJianshu.delay(url)
+    return res
+
 # @celery.task
 # def getWeibo(url):
 #     sp = WeiboSpider()
@@ -64,28 +88,35 @@ def jianshu():
 def getWechat(url):
     sp = Spider()
     data = sp.getHtmlByUrl(url)
-    res = sp.paraseWechat(data)
+    res = sp.parseWechat(data)
     return res
 
 @celery.task
 def get36Kr(url):
     sp = Spider()
     data = sp.getHtmlByUrl(url)
-    res = sp.paraseData36kr(data)
+    res = sp.parseData36kr(data)
     return res
 
 @celery.task
 def getLaohu(url):
     sp = Spider()
     data = sp.getHtmlByUrl(url)
-    res = sp.paraseDataLaohu(data)
+    res = sp.parseDataLaohu(data)
     return res
 
 @celery.task
 def getJianshu(url):
     sp = Spider()
     data = sp.getHtmlByUrl(url)
-    res = sp.paraseJianShu(data)
+    res = sp.parseJianShu(data)
+    return res
+
+@celery.task
+def getSsPi(url):
+    sp = Spider()
+    data = sp.getHtmlByUrl(url)
+    res = sp.parseSsPi(data)
     return res
 
 if __name__ == '__main__':
