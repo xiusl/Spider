@@ -213,7 +213,7 @@ class Spider():
         title = html.xpath('//h1[@class="article-title"]/text()')
         title = self._fixText(title)
 
-        author = html.xpath('//span[@class="article-author"]/text()')
+        author = html.xpath('//span[@class="article-author"]/a/text()')
         author = self._fixText(author)
 
         pub = html.xpath('//span[@class="article-date"]/text()')
@@ -349,7 +349,7 @@ class Spider():
 
     def _save(self, data):
         url = 'https://ins-api.sleen.top/spider/article'
-        #url = 'http://127.0.0.1:5000/spider/article'
+#        url = 'http://127.0.0.1:5000/spider/article'
         d = {'article': json.dumps(data, cls=DateEncoder)}
         da = json.dumps(d)
         res = self.session.post(url, headers={'Content-Type':'application/json'}, data=da)
@@ -372,6 +372,8 @@ class Spider():
 
 
 #sp = Spider()
+#u = 'https://www.laohu8.com/post/910366938'
 #data = sp.getHtmlByFile('/Users/xiusl/Desktop/abc.html')
-#data = sp.getHtmlByUrl('https://sspai.com/post/56910')
+#data = sp.getHtmlByUrl(u)
 #sp.parseSsPi(data)
+#sp.parseDataLaohu(data)
