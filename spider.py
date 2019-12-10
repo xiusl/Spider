@@ -9,6 +9,7 @@ import datetime
 import time
 import random
 import os
+import logging
 import html as ex_html
 from lxml import etree
 from utils import ImageTool, DateEncoder
@@ -25,6 +26,11 @@ class Spider():
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/604.5.6 (KHTML, like Gecko) Version/11.0.3 Safari/604.5.6'
         }
         self.im_tool = ImageTool()
+        logging.basicConfig(level=logging.DEBUG,
+                            format="%(asctime)s %(name)s %(levelname)s %(message)s",
+                            datefmt="%Y-%m-%d  %H:%M:%S %a")
+        self.debug = os.environ.get('DEBUG') or False
+
 
     def _fixText(self, text):
         new_t = ''.join(text)
@@ -349,7 +355,8 @@ class Spider():
 
     def _save(self, data):
         url = 'https://ins-api.sleen.top/spider/article'
-#        url = 'http://127.0.0.1:5000/spider/article'
+        if self.debug:
+            url = 'http://127.0.0.1:5000/spider/article'
         d = {'article': json.dumps(data, cls=DateEncoder)}
         da = json.dumps(d)
         res = self.session.post(url, headers={'Content-Type':'application/json'}, data=da)
@@ -359,11 +366,17 @@ class Spider():
     def _uploadImages(self, images):
         ims = []
         for im_url in images:
-            im, typ = self.im_tool.download(im_url)
-            new_url = self.im_tool.upload(im, typ)
+            try:
+                im, typ = self.im_tool.download(im_url)
+                new_url = self.im_tool.upload(im, typ)
+            except Exception as e:
+                new_url = im_url
+                logging.error("{} in {} replace error".format(im_url, self.url))
+                print('{} in {} replace error'.format(im_url, self.url))
             ims.append(new_url)
             wait = random.random()
-            print('download ok %s' % new_url)
+            logging.info('{} => {} download ok'.format(self.url, new_url))
+            print('{} => {} download ok'.format(self.url, new_url))
             time.sleep(wait)
         return ims
 

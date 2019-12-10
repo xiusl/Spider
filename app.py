@@ -76,7 +76,7 @@ def spider():
         res = getLaohu.delay(url)
     elif 'jianshu' in url:
         res = getJianshu.delay(url)
-    return res
+    return {'res': 'ok'}
 
 # @celery.task
 # def getWeibo(url):
