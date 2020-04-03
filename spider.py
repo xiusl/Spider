@@ -13,7 +13,13 @@ import logging
 import html as ex_html
 from lxml import etree
 from utils import ImageTool, DateEncoder, send_error
-from parse import wx_parse
+from parse import (
+    wx_parse,
+    laohu_parse,
+    kr36_parse,
+    jianshu_parse,
+    sspi_parse
+)
 
 
 class Spider():
@@ -50,23 +56,9 @@ class Spider():
 
     def parseSsPi(self, data):
         #data = ex_html.unescape(data)
-        cont = re.findall(r'window.__INITIAL_STATE__=(.*?);\(function\(\){var', data)
-        cont = cont[0]
-        cont = json.loads(cont)
-        post = cont.get('post')
-        art = post.get('articleInfo')
-
-        title = art.get('title')
-        author = art.get('author').get('nickname')
-        author_idf = str(art.get('author').get('id'))
-
-        pub_at = art.get('released_time')
-        pub_at = datetime.datetime.utcfromtimestamp(int(pub_at)) 
-
-    
-        con = art.get('body')
-        html = etree.HTML(con)
-        images = html.xpath('//img/@src')
+        res = sspi_parse(data)
+        
+        images = res['original_images']
         ims = self._uploadImages(images)
         
         trans_cont = con
@@ -76,189 +68,76 @@ class Spider():
             my_url = "src=\""+n_url+"\""
             trans_cont = trans_cont.replace(re_url,my_url)
 
-        original_id = str(art.get('id'))
-        url = 'https://sspai.com/post/'+original_id
-
-        con = con.replace('<html><head></head><body>', '')
-        con = con.replace('</body></html>', '')
-
-        trans_cont = trans_cont.replace('<html><head></head><body>', '')
-        trans_cont = trans_cont.replace('</body></html>', '')
-
-        sa = {
-            "title": title,
-            "content": con,
-            "transcoding": trans_cont,
-            "original_url": url,
-            "original_id": original_id,
-            "author": author ,
-            "author_idf": author_idf,
-            "published_at": pub_at,
-            "created_at": datetime.datetime.utcnow(),
-            "type": 'sspi',
-            "images": ims
-        }
-
-        self._save(sa)
+        res['images'] = ims
+        res['transcoding'] = trans_cont
+        res['original_url'] = self.url
+        self._save(res)
         return {'id':'123'}
 
 
 
     def parseData36kr(self, data):
-        html = etree.HTML(data)
+        res = kr36_parse(data)
 
-        jses = html.xpath('//script/text()')
-        myjs = ''
-        for js in jses:
-            if 'window.initialState' in js:
-                myjs = js
-                break
-        myjs = myjs.replace('window.initialState=', '')
-        
-        art = json.loads(myjs)
-        art_detail = art.get('articleDetail')
-        art_d = art_detail.get('articleDetailData')
-        art_d = art_d.get('data')
-            
-        content = art_d.get('content')
+        images = res['original_images']
+        my_images = self._uploadImages(images)
+        trans_content = res['content']
 
-        user = art_d.get('user')
-        author = user.get('name')
-        author_idf = user.get('id')
-        pub_at = art_d.get('published_at')
-        pub_at = datetime.datetime.strptime(pub_at, '%Y-%m-%d %H:%M:%S')
-
-
-        con = etree.HTML(content)
-        images = con.xpath('//img/@src')
-        ims = self._uploadImages(images)
-
-        trans_cont = content
         i = 0
         for im_url in images:
-            new_url = ims[i]
+            new_url = my_images[i]
             re_url = "src=\""+im_url+"\""
             my_url = "src=\""+new_url+"\""
-            trans_cont = content.replace(re_url,my_url)
+            trans_cont = trans_content.replace(re_url,my_url)
             i += 1
 
-        title = art_d.get('title')
-        original_id = art_d.get('id')
-        url = 'https://36kr.com/p/'+str(original_id)
-        
-        
-        sa = {
-            "title": title,
-            "content": content,
-            "transcoding": trans_cont,
-            "original_url": url,
-            "original_id": str(original_id),
-            "author": author ,
-            "author_idf": str(author_idf),
-            "published_at": pub_at,
-            "created_at": datetime.datetime.utcnow(),
-            "type": '36kr',
-            "images": ims
-        }
+        res['images'] = my_images
+        res['transcoding'] = trans_content
+        res['original_url'] = self.url
 
-        self._save(sa)
+        self._save(res)
         return {'id':'123'}
+
 
     def parseJianShu(self, data):
-        html = etree.HTML(data)
-        a = html.xpath('//script[@type="application/json"]/text()')
-        a = self._fixText(a)
-
-        b = json.loads(a)
-        note = b.get('props').get('initialState').get('note').get('data')
-        free_content = note.get('free_content')
-        # print(free_content)
-
-        u = note.get('user')
-
-        title = note.get('public_title')
-        author = u.get('nickname')
-        author_id = str(u.get('id'))
-        ori_id = str(note.get('id'))
-        pub = note.get('first_shared_at')
-        pub = datetime.datetime.utcfromtimestamp(int(pub))
-    
-        trans_cont = free_content
         
-        e_cont = etree.HTML(trans_cont)
-        images = e_cont.xpath('//img/@data-original-src')
-        images = ['http:'+im for im in images]
-        ims = self._uploadImages(images)
+        res = jianshu_parse(data)
+        trans_content = res['content']
+        
+        images = res['original_images']
+        my_images = self._uploadImages(images)
 
         for i, im_url in enumerate(images):
-            new_url = ims[i]
+            new_url = my_images[i]
             re_url = "data-original-src=\""+im_url+"\""
             my_url = "src=\""+new_url+"\""
-            trans_cont = trans_cont.replace(re_url,my_url)
+            trans_content = trans_content.replace(re_url,my_url)
 
-        # print(trans_cont)
-
-        sa = {
-            "title": title,
-            "content": free_content,
-            "transcoding": trans_cont,
-            "original_url": self.url,
-            "original_id": ori_id,
-            "author": author ,
-            "author_idf": author_id,
-            "published_at": pub,
-            "created_at": datetime.datetime.utcnow(),
-            "type": 'jianshu',
-            "images": ims
-        }
-        self._save(sa)
+        res['images'] = my_images
+        res['transcoding'] = trans_content
+        res['original_url'] = self.url
+        self._save(res)
         return {'id':'123'}
 
+
     def parseDataLaohu(self, data):
-        html = etree.HTML(data)
-        
-        title = html.xpath('//h1[@class="article-title"]/text()')
-        title = self._fixText(title)
+        res = laohu_parse(data)
+        images = res['original_images']
+        my_images = self._uploadImages(images)
+        trans_content = res['content']
 
-        author = html.xpath('//span[@class="article-author"]/a/text()')
-        author = self._fixText(author)
-
-        pub = html.xpath('//span[@class="article-date"]/text()')
-        pub = self._fixText(pub)
-        pub = pub[2:]
-        pub = datetime.datetime.strptime(pub, '%Y-%m-%d %H:%M')
-
-        content = html.xpath('//div[@class="article-content"]')
-        content = etree.tostring(content[0], encoding="utf8", pretty_print=True, method="html")
-        content = content.decode('utf8')
-
-        images = html.xpath('//div[@class="article-content"]')[0].xpath('.//img/@src')
-        ims = self._uploadImages(images)
-
-        trans_cont = content
         i = 0
         for im_url in images:
-            new_url = ims[i]
+            new_url = my_images[i]
             re_url = "src=\""+im_url+"\""
             my_url = "src=\""+new_url+"\""
-            trans_cont = content.replace(re_url,my_url)
+            trans_content = trans_content.replace(re_url,my_url)
             i += 1
 
-        sa = {
-            "title": title,
-            "content": content,
-            "transcoding": trans_cont,
-            "original_url": self.url,
-            "original_id": "",
-            "author": author ,
-            "author_idf": "",
-            "published_at": pub,
-            "created_at": datetime.datetime.utcnow(),
-            "type": 'laohu',
-            "images": ims
-        }
-
-        self._save(sa)
+        res['images'] = my_images
+        res['transcoding'] = trans_content
+        res['original_url'] = self.url
+        self._save(res)
         return {'id':"123"}
 
     def parseWechat(self, data):
@@ -364,6 +243,18 @@ threads.append(threading.Thread(target=test3))
 threads.append(threading.Thread(target=test4))
 
 
+
+def test():
+    sp = Spider()
+    sp.debug = True
+    url = 'https://www.laohu8.com/news/2024497124'
+    url = 'https://36kr.com/p/5308747'
+    url = 'https://www.jianshu.com/p/3441e258fd83'
+    url = 'https://sspai.com/post/59516'
+    data = sp.getHtmlByUrl(url)
+    # sp.parseData36kr(data)
+    # sp.parseJianShu(data)
+    sp.parseSsPi(data)
+
 if __name__ == '__main__':
-    for t in threads:
-        t.start()
+    test()
