@@ -7,7 +7,7 @@ import datetime
 import hashlib
 import requests
 from qcloud_cos import CosConfig, CosS3Client
-
+import settings
 
 class ImageTool():
 
@@ -75,3 +75,36 @@ class DateEncoder(json.JSONEncoder):
 #im, typ = imT.download(url)
 #imurl = imT.upload(im, typ)
 #print(imurl)
+
+def fix_text(text):
+    if isinstance(text, str):
+        return text.strip()
+    t = ''.join(text)
+    return t.strip()
+
+
+
+from email.mime.text import MIMEText
+import smtplib
+
+
+def send_email(to, subject, content):
+    msg = MIMEText(content.encode('utf8'), 'html', 'utf8')
+    msg['From'] = settings.EMAIL_ADMIN
+    msg['To'] = to
+    msg['Subject'] = subject
+    try:
+        smtp = smtplib.SMTP_SSL(settings.EMAIL_SMTP, settings.EMAIL_SMTP_PORT)
+        smtp.ehlo()
+        smtp.login(settings.EMAIL_ADMIN, settings.EMAIL_ADMIN_PWD)
+        smtp.sendmail(settings.EMAIL_ADMIN, to, msg.as_string())
+        smtp.close()
+    except Exception as e:
+        print(e)
+        return False
+    return True
+
+
+def send_error(url, msg):
+    content = "[{0}]<br/>{1}".format(url, msg)
+    return send_email('xiushilin@hotmail.com', '爬虫错误', content)
