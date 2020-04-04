@@ -43,7 +43,6 @@ def jianshu_parse(data):
         "author": author ,
         "author_idf": str(author_id),
         "published_at": pub,
-        "created_at": datetime.utcnow(),
         "type": 'jianshu',
         "original_images": images
     }

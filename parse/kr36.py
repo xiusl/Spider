@@ -50,7 +50,6 @@ def kr36_parse(data):
         "author": fix_text(author),
         "author_idf": str(author_idf),
         "published_at": pub_at,
-        "created_at": datetime.utcnow(),
         "type": '36kr',
         "original_images": images
     }

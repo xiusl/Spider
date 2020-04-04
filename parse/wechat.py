@@ -60,7 +60,6 @@ def wx_parse(data):
         "author": fix_text(wx_name)+'/'+fix_text(editor) ,
         "author_idf": fix_text(wx_code),
         "published_at": date_int,
-        "created_at": datetime.utcnow(),
         "type": 'wechat',
         "original_images": images
     }

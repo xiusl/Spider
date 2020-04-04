@@ -33,7 +33,6 @@ def laohu_parse(data):
         "author": fix_text(author),
         "author_idf": "",
         "published_at": pub,
-        "created_at": datetime.utcnow(),
         "type": 'laohu',
         "original_images": images
     }
