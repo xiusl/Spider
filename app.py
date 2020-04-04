@@ -18,6 +18,10 @@ celery.conf.update(app.config)
 CORS(app, supports_credentials=True)
 
 
+@app.route('/')
+def index():
+    return "暗号：落霞与孤鹜齐飞"
+
 # @app.route('/weibo', methods=['POST'])
 # def weibo():
 #     data = request.get_json()
