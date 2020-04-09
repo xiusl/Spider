@@ -18,6 +18,7 @@ from parse import (
     laohu_parse,
     kr36_parse,
     jianshu_parse,
+    zhihu_parse,
     sspi_parse
 )
 
@@ -27,8 +28,8 @@ class Spider():
     def __init__(self):
         self.session = requests.session()
         self.headers = {
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'zh-cn',
+            'Accept': 'text/html,application/xhtml+xml,application/xml,application/json,*/*;',
+            'Accept-Language': 'zh-CN,zh;q=0.9',
             'Accept-Encoding': 'gzip, deflate, br',
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/604.5.6 (KHTML, like Gecko) Version/11.0.3 Safari/604.5.6'
         }
@@ -46,7 +47,11 @@ class Spider():
     def getHtmlByUrl(self, url):
         self.url = url
         response = self.session.get(url, headers=self.headers)
-        data = response.text
+        response.encoding = "utf-8"
+        data = response.content.decode("utf-8", 'ignore')
+        
+        # data = response.text
+        
         return data
 
     def getHtmlByFile(self, path):
@@ -163,10 +168,33 @@ class Spider():
         self._save(res)
         return {'id': '123'}
 
+    def parseZhihu(self, data):
+        print(type(data))
+#data = data.encode('utf8',"ignore")
+        print(data)
+        with open('/Users/tmt/Desktop/bc.html', 'w') as fff:
+            fff.write(data)
+        res = zhihu_parse(data)
+        images = res['original_images']
+        my_images = self._uploadImages(images)
+
+        trans_content = res['content']
+        for i, im_url in enumerate(images):
+            new_url = my_images[i]
+            re_url = "src=\""+im_url+"\""
+            my_url = "src=\""+new_url+"\""
+            trans_content = trans_content.replace(re_url,my_url)
+
+        res['images'] = my_images
+        res['transcoding'] = trans_content
+        res['original_url'] = self.url
+        self._save(res)
+        return {'id': '123'}
+
     def _save(self, data):
         url = 'https://ins-api.sleen.top/spider/article'
-        if self.debug:
-            url = 'http://127.0.0.1:5000/spider/article'
+#        if self.debug:
+#            url = 'http://127.0.0.1:5000/spider/article'
         d = {'article': json.dumps(data, cls=DateEncoder)}
         da = json.dumps(d)
         res = self.session.post(url, headers={'Content-Type':'application/json'}, data=da)
@@ -251,10 +279,14 @@ def test():
     url = 'https://36kr.com/p/5308747'
     url = 'https://www.jianshu.com/p/3441e258fd83'
     url = 'https://sspai.com/post/59516'
-    data = sp.getHtmlByUrl(url)
+    url = 'https://www.zhihu.com/question/322092871/answer/1093930093'
+    sp.url = url
+    data = sp.getHtmlByFile('/Users/tmt/Desktop/zhihu.html')
+# data = sp.getHtmlByUrl(url)
     # sp.parseData36kr(data)
     # sp.parseJianShu(data)
-    sp.parseSsPi(data)
+    # sp.parseSsPi(data)
+    sp.parseZhihu(data)
 
 if __name__ == '__main__':
     test()
