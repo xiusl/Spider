@@ -82,7 +82,11 @@ class Spider():
 
 
     def parseData36kr(self, data):
-        res = kr36_parse(data)
+        try:
+            res = kr36_parse(data)
+        except Exception as e:
+            send_error(self.url, '解析失败啦，快去看看')
+            return
 
         images = res['original_images']
         my_images = self._uploadImages(images)
@@ -126,7 +130,13 @@ class Spider():
 
 
     def parseDataLaohu(self, data):
-        res = laohu_parse(data)
+
+        try:
+            res = laohu_parse(data)
+        except Exception as e:
+            send_error(self.url, '解析失败啦，快去看看')
+            return
+
         images = res['original_images']
         my_images = self._uploadImages(images)
         trans_content = res['content']
@@ -147,7 +157,12 @@ class Spider():
 
     def parseWechat(self, data):
         
-        res = wx_parse(data)
+        try:
+            res = wx_parse(data)
+        except Exception as e:
+            send_error(self.url, '解析失败啦，快去看看')
+            return
+
         images = res['original_images']
         my_images = self._uploadImages(images)
 
@@ -198,7 +213,7 @@ class Spider():
         d = {'article': json.dumps(data, cls=DateEncoder)}
         da = json.dumps(d)
         res = self.session.post(url, headers={'Content-Type':'application/json'}, data=da)
-        print('{0}: {1}'.format(data['title'], res.status_code))
+#        print('{0}: {1}'.format(data['title'], res.status_code))
         if res.status_code > 200:
             send_error(self.url, '解析成功，但是保存失败。请检查接受服务器连接{}，<br/>数据：{}'.format(url, str(data)))
         return {'id': '123'}
@@ -280,13 +295,14 @@ def test():
     url = 'https://www.jianshu.com/p/3441e258fd83'
     url = 'https://sspai.com/post/59516'
     url = 'https://www.zhihu.com/question/322092871/answer/1093930093'
+    url = 'https://36kr.com/p/698931921812102'
     sp.url = url
-    data = sp.getHtmlByFile('/Users/tmt/Desktop/zhihu.html')
-# data = sp.getHtmlByUrl(url)
-    # sp.parseData36kr(data)
+    #data = sp.getHtmlByFile('/Users/tmt/Desktop/zhihu.html')
+    data = sp.getHtmlByUrl(url)
+    sp.parseData36kr(data)
     # sp.parseJianShu(data)
     # sp.parseSsPi(data)
-    sp.parseZhihu(data)
+    # sp.parseZhihu(data)
 
 if __name__ == '__main__':
     test()

@@ -26,17 +26,17 @@ def kr36_parse(data):
     art_d = art_detail.get('articleDetailData')
     art_d = art_d.get('data')
         
-    content = art_d.get('content')
+    content = art_d.get('widgetContent')
 
-    title = art_d.get('title')
-    original_id = art_d.get('id')
+    title = art_d.get('widgetTitle')
+    original_id = art_d.get('itemId')
 
-    user = art_d.get('user')
-    author = user.get('name')
-    author_idf = user.get('id')
-    pub_at = art_d.get('published_at')
+    author = art_d.get('author')
+    author_idf = art_d.get('authorId')
+    pub_at = art_d.get('publishTime')
     print(pub_at)
-    pub_at = datetime.strptime(pub_at, '%Y-%m-%d %H:%M:%S')
+    #pub_at = datetime.strptime(pub_at, '%Y-%m-%d %H:%M:%S')
+    pub_at = datetime.utcfromtimestamp(int(pub_at)) * 0.001)
 
 
     con = etree.HTML(content)
