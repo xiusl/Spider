@@ -36,7 +36,7 @@ def kr36_parse(data):
     pub_at = art_d.get('publishTime')
     print(pub_at)
     #pub_at = datetime.strptime(pub_at, '%Y-%m-%d %H:%M:%S')
-    pub_at = datetime.utcfromtimestamp(int(pub_at)) * 0.001)
+    pub_at = datetime.utcfromtimestamp(int(pub_at) * 0.001)
 
 
     con = etree.HTML(content)
