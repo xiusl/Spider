@@ -15,12 +15,15 @@ def kr36_parse(data):
 
     jses = html.xpath('//script/text()')
     myjs = ''
+    
     for js in jses:
-        if 'window.initialState' in js:
+        if 'window.initialState=' in js:
             myjs = js
             break
     myjs = myjs.replace('window.initialState=', '')
     
+    print(myjs)
+
     art = json.loads(myjs)
     art_detail = art.get('articleDetail')
     art_d = art_detail.get('articleDetailData')
@@ -54,3 +57,15 @@ def kr36_parse(data):
         "original_images": images
     }
     return res
+
+
+
+def test():
+    with open('a.html') as f:
+        d = f.read()
+        res = kr36_parse(d)
+
+        print(res)
+
+
+# test()
