@@ -97,7 +97,7 @@ class Spider():
             new_url = my_images[i]
             re_url = "src=\""+im_url+"\""
             my_url = "src=\""+new_url+"\""
-            trans_cont = trans_content.replace(re_url,my_url)
+            trans_content = trans_content.replace(re_url,my_url)
             i += 1
 
         res['images'] = my_images
