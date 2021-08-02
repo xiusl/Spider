@@ -9,8 +9,8 @@ from spider import Spider
 app = Flask(__name__)
 app.config['PORT'] = 5001
 app.config['DEBUG'] = True
-app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
-app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
+app.config['CELERY_BROKER_URL'] = 'redis://:rds123456@127.0.0.1:6379/1'
+app.config['CELERY_RESULT_BACKEND'] = 'redis://:rds123456@127.0.0.1:6379/2'
 
 celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
 celery.conf.update(app.config)
@@ -40,7 +40,9 @@ def wechat():
 def kr36():
     data = request.get_json()
     url = data.get('url')
-    res = get36Kr.delay(url)
+    u_id = data.get('user_id')
+    art_id = data.get('art_id')
+    res = get36Kr.delay(url, u_id, art_id)
     return {'id':"12312"}
 
 @app.route('/laohu', methods=['POST'])
@@ -69,11 +71,13 @@ def sspi():
 def spider():
     data = request.get_json()
     url = data.get('url')
+    u_id = data.get('user_id')
+    art_id = data.get('art_id')
     res = {'res': 'nono'}
     if 'sspai' in url:
         res = getSsPi.delay(url)
     elif '36kr' in url:
-        res = get36Kr.delay(url)
+        res = get36Kr.delay(url, u_id, art_id)
     elif 'weixin' in url:
         res = getWechat.delay(url)
     elif 'laohu' in url:
@@ -96,8 +100,8 @@ def getWechat(url):
     return res
 
 @celery.task
-def get36Kr(url):
-    sp = Spider()
+def get36Kr(url, u_id, art_id):
+    sp = Spider(u_id=u_id,art_id=art_id)
     data = sp.getHtmlByUrl(url)
     res = sp.parseData36kr(data)
     return res
