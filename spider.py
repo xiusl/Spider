@@ -211,7 +211,7 @@ class Spider():
     def _save(self, data):
         url = 'https://ins-api.sleen.top/spider/articles'
 #        if self.debug:
-        url = 'http://127.0.0.1:5000/spider/articles'
+#        url = 'http://127.0.0.1:5000/spider/articles'
         d = {'article': json.dumps(data, cls=DateEncoder), 'u_id':self.u_id, 'art_id': self.art_id}
         print(d)
         da = json.dumps(d)
