@@ -209,13 +209,14 @@ class Spider():
         return {'id': '123'}
 
     def _save(self, data):
-        url = 'https://ins-api.sleen.top/spider/article'
+        url = 'https://ins-api.sleen.top/spider/articles'
 #        if self.debug:
-        url = 'http://127.0.0.1:5000/spider/article'
+        url = 'http://127.0.0.1:5000/spider/articles'
         d = {'article': json.dumps(data, cls=DateEncoder), 'u_id':self.u_id, 'art_id': self.art_id}
         print(d)
         da = json.dumps(d)
-        res = self.session.post(url, headers={'Content-Type':'application/json'}, json=da)
+        # need user data
+        res = self.session.post(url, headers={'Content-Type':'application/json'}, data=da)
 #        print('{0}: {1}'.format(data['title'], res.status_code))
         if res.status_code > 200:
             send_error(self.url, '解析成功，但是保存失败。请检查接受服务器连接{}，<br/>数据：{}'.format(url, str(data)))
